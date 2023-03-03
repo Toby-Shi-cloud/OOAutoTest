@@ -1,3 +1,9 @@
+## 关于提交新数据
+
+直接加在 `data/data.dat` 后面，然后单独 `git add data/data.dat` 即可。
+
+如果有其他想要改进的东西，可以提 issue 或者 pull requests
+
 ## 如何使用
 
 - `main.py`
