@@ -1,27 +1,11 @@
 import re
-import sympy
-from generator import generate_data
-from subprocess import Popen, PIPE, TimeoutExpired
+import data
+from util.judge import judge, run_sh
 
 
 # Setting
-MAX_TURN = 1
-JAR_FILE_NAME_LIST = [
-    'my.jar'
-    # 'Alterego.jar',
-    # 'Archer.jar',
-    # 'Assassin.jar',
-    # 'Berserker.jar',
-    # 'Caster.jar',
-    # 'Lancer.jar',
-    # 'Saber.jar'
-]
-
-
-# Special Testcase
-SPECIAL_CASE = [
-    'y **+6*sin(cos((+-y **6*2*x--+1*y**+2*8*-2+--6*-5+--6*+5---8*y**+1)** 2)**8)*1--1+-3*x**+7+-+3*x**5+--3*x**6*+4+-y',
-    '0*x**0',
+SH_EXEC_LIST = [
+    [['zsh', '../OOLab1/run.sh'], '../OOLab1'],
 ]
 
 
@@ -34,32 +18,16 @@ def parse_leading_zero(s: str):
 # main
 if __name__ == '__main__':
     turn = 0
-    while turn != MAX_TURN:
+    for istr in data.TESTCASES:
         print('#' + str(turn) + ':')
-        istr = SPECIAL_CASE[turn] if turn < len(SPECIAL_CASE) else generate_data()
-        print('Input:', istr.strip())
+        print('Input:')
+        print(istr.strip())
 
-        for jar_file in JAR_FILE_NAME_LIST:
-            with Popen(args=['java', '-jar', jar_file], encoding='utf-8', stdin=PIPE, stdout=PIPE, stderr=PIPE) as proc:
-                try:
-                    ostr, estr = proc.communicate(istr + '\n', 15)
-                except TimeoutExpired:
-                    proc.kill()
-                    ostr, estr = ('', '')
-            if '(' in ostr or ')' in ostr:
-                print('Output:', ostr.strip())
-                print(jar_file, 'Wrong Answer!')
-                exit(-1)
-            try:
-                ifunc = sympy.sympify(parse_leading_zero(' ' + istr))
-                ofunc = sympy.sympify(parse_leading_zero(' ' + ostr))
-                if not ifunc.equals(ofunc):
-                    print('Output:', ostr.strip())
-                    print(jar_file, 'Wrong Answer!')
-                    exit(-1)
-            except ValueError:
-                print('Output:', ostr.strip())
-                print(jar_file, 'Wrong Answer!')
+        for sh_ in SH_EXEC_LIST:
+            ostr = run_sh(sh_[0], istr, sh_[1])
+            if not judge(istr, ostr):
+                print('Output:', ostr)
+                print('Wrong Answer!', sh_[0])
                 exit(-1)
         turn += 1
         print()

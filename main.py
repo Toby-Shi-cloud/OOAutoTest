@@ -5,7 +5,7 @@ from alive_progress import alive_bar
 
 from network import fetch
 from data import TESTCASES
-from util import run_jar, judge, get_grade
+from util.judge import run_jar, judge, get_grade
 
 
 def main():
@@ -13,7 +13,7 @@ def main():
     jar_name = input('Please input your jar file name: ')
 
     print('===== Test Begin =====')
-    df = pd.DataFrame(columns=['Testcase Hash', 'Status', 'Lp', 'Lmin', 'Performance', 'Input'])
+    df = pd.DataFrame(columns=['Testcase Hash', 'Status', 'Lp', 'Lmin', 'Performance', 'Input', 'Output'])
     try:
         with alive_bar(len(TESTCASES)) as bar:
             for istr in TESTCASES:
@@ -28,9 +28,9 @@ def main():
                         print('Something went wrong...')
                         print('Maybe you can check your network and retry...')
                         break
-                    df.loc[len(df.index)] = [istr_hash, 'Accepted', lp, lmin, get_grade(lp, lmin, 20), istr]
+                    df.loc[len(df.index)] = [istr_hash, 'Accepted', lp, lmin, get_grade(lp, lmin, 20), istr, ostr]
                 else:
-                    df.loc[len(df.index)] = [istr_hash, 'Wrong Answer', None, None, 0.0, istr]
+                    df.loc[len(df.index)] = [istr_hash, 'Wrong Answer', None, None, 0.0, istr, ostr]
                 bar()
     except KeyboardInterrupt:
         print('KeyboardInterrupt!')
