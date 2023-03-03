@@ -4,5 +4,6 @@
 
 *.jar
 dist
+score.csv
 
 .DS_Store
