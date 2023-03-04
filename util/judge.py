@@ -4,12 +4,17 @@ import sympy
 from sympy import sin, cos
 from colorama import Fore, Back
 from util.checker import check_all
+from func_timeout import func_set_timeout
 from subprocess import Popen, PIPE, TimeoutExpired
 
 
 COMPARE_COUNT = 10000
 RANDINT_RANGE = [-10000, 10000]
 sys.setrecursionlimit(1000000)
+
+
+class OutputLimitExceeded(Exception):
+    pass
 
 
 # Parse Leading Zero
@@ -19,6 +24,7 @@ def parse_leading_zero(s: str):
     return pattern.sub(r'\g<1>\g<2>', s)
 
 
+@func_set_timeout(60)
 def judge(s1: str, s2: str):
     """
     s1 - input str; s2 - output str;
@@ -27,7 +33,7 @@ def judge(s1: str, s2: str):
     s1 = parse_leading_zero(' ' + s1)[1:].strip()
     s2 = parse_leading_zero(' ' + s2)[1:].strip()
     if len(s2) > 200000:
-        raise IndexError(f'Output Limit Exceeded! ({len(s2)} bytes)')
+        raise OutputLimitExceeded(f'Output Limit Exceeded! ({len(s2)} bytes)')
     fc = s1.split('\n')
     f, g, h = None, None, None
     for k in fc[1:-1]:

@@ -3,10 +3,11 @@ import leancloud
 import pandas as pd
 from hashlib import md5
 from alive_progress import alive_bar
+from func_timeout.exceptions import FunctionTimedOut
 
 from network import fetch
 from data import TESTCASES
-from util.judge import run_jar, judge, get_grade
+from util.judge import run_jar, judge, get_grade, OutputLimitExceeded
 
 
 def deal(s: str):
@@ -45,10 +46,13 @@ def main():
                         df.loc[len(df.index)] = [istr_hash, 'Wrong Answer', None, None, 0.0, deal(istr), deal(ostr)]
                 except RecursionError as e:
                     print(e, file=sys.stderr)
-                    df.loc[len(df.index)] = [istr_hash, 'Recursion Overflow', None, None, 0.0, deal(istr), deal(ostr)]
-                except IndexError as e:
+                    df.loc[len(df.index)] = [istr_hash, 'Judge Recursion Overflow', None, None, None, deal(istr), deal(ostr)]
+                except OutputLimitExceeded as e:
                     print(e, file=sys.stderr)
                     df.loc[len(df.index)] = [istr_hash, 'Output Limit Exceeded', None, None, 0.0, deal(istr), deal(ostr)]
+                except FunctionTimedOut:
+                    print('Judge timed out after 60 seconds.', file=sys.stderr)
+                    df.loc[len(df.index)] = [istr_hash, 'Judge Timeout', None, None, None, deal(istr), deal(ostr)]
                 bar()
     except KeyboardInterrupt:
         print('KeyboardInterrupt!')
