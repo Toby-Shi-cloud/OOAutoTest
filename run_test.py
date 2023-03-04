@@ -5,9 +5,9 @@ from util.judge import judge, run_sh
 
 
 # Setting
-TURN = 0  # 0 run data/data.dat，0+ run gen_xc.py
+TURN = 10  # 0 run data/data.dat，0+ run gen_xc.py
 SH_EXEC_LIST = [
-    [['zsh', '../OOLab1/run.sh'], '../OOLab1'],
+    [['java', '-jar', 'Expr_expansion2.jar'], 'D:/.oo_file/hw2/Expr_expansion2/out/artifacts/Expr_expansion2_jar'],
 ]
 
 
