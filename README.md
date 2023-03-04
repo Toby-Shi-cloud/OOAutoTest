@@ -37,6 +37,9 @@ SH_EXEC_LIST = [
 - `gen/generator.old.py`
 > 旧版数据生成器，无法生成三角函数
 
+- `gen/gen_xc.py`
+> 肖灿哥哥写的数据生成器
+
 - `util/checker.py`
 > 检查输出是否符合形式化描述，且没有多余括号
 
