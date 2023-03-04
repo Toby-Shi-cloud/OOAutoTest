@@ -28,7 +28,9 @@ def main():
                 ostr = run_jar(jar_name, istr)
                 istr_hash = md5(istr.encode('utf-8')).hexdigest()
                 try:
-                    if judge(istr, ostr):
+                    if ostr == '':
+                        df.loc[len(df.index)] = [istr_hash, 'Time Limit Exceeded', None, None, 0.0, deal(istr), None]
+                    elif judge(istr, ostr):
                         lp = len(ostr.strip())
                         try:
                             lmin = fetch(istr_hash, lp)
@@ -41,9 +43,12 @@ def main():
                             [istr_hash, 'Accepted', lp, lmin, get_grade(lp, lmin, 20), deal(istr), deal(ostr)]
                     else:
                         df.loc[len(df.index)] = [istr_hash, 'Wrong Answer', None, None, 0.0, deal(istr), deal(ostr)]
-                except RecursionError:
-                    print('Recursion Overflow!', file=sys.stderr)
-                    df.loc[len(df.index)] = [istr_hash, 'Recursion Overflow', None, None, None, deal(istr), deal(ostr)]
+                except RecursionError as e:
+                    print(e, file=sys.stderr)
+                    df.loc[len(df.index)] = [istr_hash, 'Recursion Overflow', None, None, 0.0, deal(istr), deal(ostr)]
+                except IndexError as e:
+                    print(e, file=sys.stderr)
+                    df.loc[len(df.index)] = [istr_hash, 'Output Limit Exceeded', None, None, 0.0, deal(istr), deal(ostr)]
                 bar()
     except KeyboardInterrupt:
         print('KeyboardInterrupt!')

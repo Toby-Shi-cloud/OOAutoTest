@@ -17,8 +17,10 @@ def generate_expr():
     res = rand_def_func()
     global var_list
     var_list = ['x', 'y', 'z']
+    global difficulty
+    difficulty = 0
     expr = rand_expr()
-    while len(expr.replace(' ', '').replace('\t', '')) < 10 * random.randint(1, 5):
+    while len(expr.replace(' ', '').replace('\t', '')) < 10 * random.randint(1, 7):
         op = random.choice(['+', '-'])
         expr += op + rand_space() + rand_term()
     func_list.clear()
@@ -32,6 +34,7 @@ def generate_expr():
 def rand_def_func():
     global func_used
     global func_list
+    global difficulty
     func_used = True
     func_dic = ['f', 'g', 'h']
     func_list = random.sample(func_dic, random.randint(1, 3))
@@ -40,6 +43,7 @@ def rand_def_func():
     for i in range(0, func_num):
         var_str = rand_var()
         num_of_var.append(len(var_list))
+        difficulty = 2
         func_def_list.append(rand_expr())
         def_str += func_list[i] + rand_space() + '(' + var_str[0:len(var_str)] + ')' + rand_space() + '=' + \
                    func_def_list[i] + '\n'
@@ -99,7 +103,7 @@ def rand_expr_factor():
     global difficulty
     bracket_dep -= 1
     difficulty += 1
-    if random.random() < 0.4:
+    if random.random() < 0.4 + 0.05*difficulty:
         return '(' + expr + ')'
     return '(' + expr + ') ' + rand_index()
 
@@ -132,7 +136,7 @@ def rand_var_factor():
 # 生成幂函数
 def rand_power():
     base = random.choice(var_list)
-    if random.random() < 0.40:
+    if random.random() < 0.40 + 0.03*difficulty:
         return base
     else:
         return base + rand_space() + rand_index()
@@ -142,7 +146,7 @@ def rand_power():
 def rand_trig():
     func = random.choice(['sin', 'cos'])
     fun_str = func + rand_space() + '(' + rand_space() + rand_factor() + rand_space() + ')'
-    if random.random() < 0.40:
+    if random.random() < 0.40 + 0.03*difficulty:
         return fun_str
     else:
         return fun_str + rand_index()
