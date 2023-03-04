@@ -51,7 +51,10 @@ def judge(s1: str, s2: str):
         x = sympy.Symbol('x')
         y = sympy.Symbol('y')
         z = sympy.Symbol('z')
-        return True if eval(fc[-1]).equals(eval(s2)) else False
+        cccc = eval(fc[-1])
+        if isinstance(cccc, int):
+            return cccc == eval(s2)
+        return True if cccc.equals(eval(s2)) else False
     except ValueError as e:
         print(e, file=sys.stderr)
         return False

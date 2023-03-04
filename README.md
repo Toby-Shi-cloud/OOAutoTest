@@ -23,6 +23,7 @@ SH_EXEC_LIST = [
 > cwd 是程序运行的目录，建议改为 jar 所在路径或者 sh 所在路径。
 >
 > 更改 TURN 可以测试不同的数据。TURN 为 0 时测试 data/data.dat 中的数据。否则测试 `gen_xc.py` 中的数据。
+> TURN == -1 时，运行 SINGLE_TEST 数据。
 >
 > 需要注意的是现在 `gen_xc.py` 中的数据强度过高，评测机可能无法在合理时间内得到结果。
 
