@@ -20,7 +20,7 @@ def generate_expr():
     global difficulty
     difficulty = 0
     expr = rand_expr()
-    while len(expr.replace(' ', '').replace('\t', '')) < 10 * random.randint(1, 7):
+    while len(expr.replace(' ', '').replace('\t', '')) < 10 * random.randint(1, 5):
         op = random.choice(['+', '-'])
         expr += op + rand_space() + rand_term()
     func_list.clear()
@@ -68,7 +68,7 @@ def rand_var():
 def rand_expr():
     op = random.choice(['+', '-'])
     final_expr = rand_space() + op + rand_term() + rand_space()
-    term_num = random.randint(0,  0 if 4-difficulty-2*func_used < 0 else 5-difficulty-2*func_used)
+    term_num = random.randint(0,  0 if 4-difficulty-2*func_used < 0 else 4-difficulty-2*func_used)
     for i in range(0, term_num):
         op = random.choice(['+', '-'])
         final_expr += op + rand_space() + rand_term() + rand_space()
@@ -78,7 +78,7 @@ def rand_expr():
 def rand_term():
     op = random.choice(['+', '-'])
     final_term = rand_space() + op + rand_factor()
-    factor_num = random.randint(0, 0 if 6-difficulty-3*func_used < 0 else 7-difficulty-3*func_used)
+    factor_num = random.randint(0, 0 if 6-difficulty-3*func_used < 0 else 6-difficulty-3*func_used)
     for i in range(0, factor_num):
         final_term += rand_space() + "*" + rand_space() + rand_factor()
     return final_term
@@ -92,7 +92,7 @@ def rand_factor():
     if ran_num < 0.20 - 0.05 * bracket_dep - 0.02*difficulty - 0.05*func_used:
         bracket_dep += 1
         return rand_expr_factor()
-    elif ran_num < 0.5 + 0.03*difficulty:
+    elif ran_num < 0.45 + 0.03*difficulty:
         return rand_signed_int()
     else:
         return rand_var_factor()
@@ -126,10 +126,10 @@ def rand_var_factor():
     #     return rand_trig()
     # else:
     #     return rand_power()
-    if ran_num < 0.33 - 0.03*difficulty and not func_used and len(func_list) != 0:
+    if ran_num < 0.25 - 0.03*difficulty and not func_used and len(func_list) != 0:
         difficulty += 1
         return rand_func()
-    elif ran_num < 0.70 - 0.05*difficulty:
+    elif ran_num < 0.55 - 0.05*difficulty:
         return rand_trig()
     else:
         return rand_power()
@@ -175,7 +175,7 @@ def rand_index():
     if rate > 95 + difficulty + 1*func_used:
         difficulty += 1
         num = str(8)
-    elif rate > 75 + 2*difficulty + 5*func_used:
+    elif rate > 75 + 3*difficulty + 5*func_used:
         num = str(random.randint(5, 8))
     elif rate > 40 + 3*difficulty + 5*func_used:
         num = str(random.randint(3, 6))
@@ -191,7 +191,7 @@ def rand_int():
     rate = random.randint(0, 100)
     pre0 = "0" * random.randint(0, 3)
     global difficulty
-    if rate > 95 + difficulty + 1*func_used:
+    if rate > 95 + 2*difficulty + 1*func_used:
         difficulty += 1
         return pre0 + str(random.randint(99999999, 99999999999))
     elif rate > 70 + 3*difficulty:
