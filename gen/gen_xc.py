@@ -68,7 +68,8 @@ def rand_var():
 def rand_expr():
     op = random.choice(['+', '-'])
     final_expr = rand_space() + op + rand_term() + rand_space()
-    for i in range(random.randint(0, 3)):
+    term_num = random.randint(0,  0 if 4-difficulty-2*func_used < 0 else 5-difficulty-2*func_used)
+    for i in range(0, term_num):
         op = random.choice(['+', '-'])
         final_expr += op + rand_space() + rand_term() + rand_space()
     return final_expr
@@ -77,7 +78,8 @@ def rand_expr():
 def rand_term():
     op = random.choice(['+', '-'])
     final_term = rand_space() + op + rand_factor()
-    for i in range(random.randint(0, 6)):
+    factor_num = random.randint(0, 0 if 6-difficulty-3*func_used < 0 else 7-difficulty-3*func_used)
+    for i in range(0, factor_num):
         final_term += rand_space() + "*" + rand_space() + rand_factor()
     return final_term
 
@@ -87,10 +89,10 @@ def rand_factor():
     choice = random.choice(['var', 'const', 'expr'])
     ran_num = random.random()
     global bracket_dep
-    if ran_num < 0.20 - 0.05 * bracket_dep - 0.02*difficulty:
+    if ran_num < 0.20 - 0.05 * bracket_dep - 0.02*difficulty - 0.05*func_used:
         bracket_dep += 1
         return rand_expr_factor()
-    elif ran_num < 0.60 + 0.03*difficulty:
+    elif ran_num < 0.5 + 0.03*difficulty:
         return rand_signed_int()
     else:
         return rand_var_factor()
@@ -103,7 +105,7 @@ def rand_expr_factor():
     global difficulty
     bracket_dep -= 1
     difficulty += 1
-    if random.random() < 0.4 + 0.05*difficulty:
+    if random.random() < 0.4 + 0.05*difficulty + 0.2*func_used:
         return '(' + expr + ')'
     return '(' + expr + ') ' + rand_index()
 
@@ -170,12 +172,12 @@ def rand_index():
     sign = random.choice(['', '+'])
     pre0 = '0' * random.randint(0, 5)
     global difficulty
-    if rate > 95 + difficulty:
+    if rate > 95 + difficulty + 1*func_used:
         difficulty += 1
         num = str(8)
-    elif rate > 75 + 2*difficulty:
+    elif rate > 75 + 2*difficulty + 5*func_used:
         num = str(random.randint(5, 8))
-    elif rate > 40 + 3*difficulty:
+    elif rate > 40 + 3*difficulty + 5*func_used:
         num = str(random.randint(3, 6))
     elif rate > 30:
         num = str(0)
@@ -189,10 +191,10 @@ def rand_int():
     rate = random.randint(0, 100)
     pre0 = "0" * random.randint(0, 3)
     global difficulty
-    if rate > 95 + difficulty:
+    if rate > 95 + difficulty + 1*func_used:
         difficulty += 1
         return pre0 + str(random.randint(99999999, 99999999999))
-    elif rate > 70 + 2*difficulty:
+    elif rate > 70 + 3*difficulty:
         return pre0 + str(random.randint(9999, 99999))
     elif rate > 60:
         return pre0 + str(random.randint(99, 999))
@@ -207,7 +209,7 @@ def rand_space():
     rate = random.randint(0, 100)
     if rate > 95 + difficulty:
         return ' ' * 3 + '\t' * 3
-    elif rate > 70 + 3*difficulty:
+    elif rate > 70 + 3*difficulty + 5*func_used:
         return ' ' * 2 + '\t' * 1
     elif rate > 55:
         return ' ' * 1
