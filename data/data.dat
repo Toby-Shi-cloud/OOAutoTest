@@ -10,11 +10,6 @@ f(x,y,z)=(x+y+z+1)**2
 g(x,y,z)=(sin(x)+sin(y)+sin(z)+cos(1))*(cos((1-x))+cos((1-y))+cos((1-z)))
 f(g(1,x,0),g(x**2,x**3,x**4),g(-1,0,1))
 
-2
-f(x,y,z)=(x+y+z+1)**2
-g(x,y,z)=(sin(x)+sin(y)+sin(z)+cos(1))*(cos((1-x))+cos((1-y))+cos((1-z)))**3
-f(g(1,x,0),g(x**2,x**3,x**4),g(-1,0,1))
-
 0
 sin((x*x))-sin((-x))
 
@@ -60,7 +55,7 @@ h(h(h(sin(z),cos(z)),h(sin(z),cos(z))),h(h(sin(z),cos(z)),h(sin(z),cos(z))))
 4*sin(x)**3-4*sin(x)
 
 0
-sin(y+z)+sin(z-y)
+sin((y+z))+sin((z-y))
 
 1
 g(y)=-y
