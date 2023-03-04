@@ -24,11 +24,13 @@ def judge(s1: str, s2: str):
     s1 - input str; s2 - output str;
     return True if s1 == s2 else False
     """
-    s1 = parse_leading_zero(' ' + s1)[1:]
-    s2 = parse_leading_zero(' ' + s2)[1:]
+    s1 = parse_leading_zero(' ' + s1)[1:].strip()
+    s2 = parse_leading_zero(' ' + s2)[1:].strip()
+    if len(s2) > 200000:
+        raise IndexError(f'Output Limit Exceeded! ({len(s2)} bytes)')
     fc = s1.split('\n')
     f, g, h = None, None, None
-    for k in fc[1:-2]:
+    for k in fc[1:-1]:
         k = k.replace(' ', '').replace('\t', '')
         matcher = re.match(r'(?P<name>[fgh])\((?P<param>.*?)\)=(?P<expr>.*)', k)
         if matcher is None:
@@ -49,7 +51,7 @@ def judge(s1: str, s2: str):
         x = sympy.Symbol('x')
         y = sympy.Symbol('y')
         z = sympy.Symbol('z')
-        return True if eval(fc[-2]).equals(eval(s2)) else False
+        return True if eval(fc[-1]).equals(eval(s2)) else False
     except ValueError as e:
         print(e, file=sys.stderr)
         return False

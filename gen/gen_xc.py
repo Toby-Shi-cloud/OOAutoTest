@@ -6,15 +6,15 @@ func_list = []
 func_def_list = []
 num_of_var = []
 bracket_dep = 0
-
+difficulty = 0
 func_used = False
 
 
 def generate_expr():
-    res = rand_def_func()
     func_list.clear()
     func_def_list.clear()
     num_of_var.clear()
+    res = rand_def_func()
     expr = rand_expr()
     while len(expr.replace(' ', '').replace('\t', '')) < 10 * random.randint(1, 5):
         op = random.choice(['+', '-'])
@@ -82,7 +82,7 @@ def rand_factor():
     choice = random.choice(['var', 'const', 'expr'])
     ran_num = random.random()
     global bracket_dep
-    if ran_num < 0.15 - 0.05 * bracket_dep:
+    if ran_num < 0.15 - 0.05 * bracket_dep - 0.02 * difficulty:
         bracket_dep += 1
         return rand_expr_factor()
     elif ran_num < 0.60:
@@ -95,7 +95,9 @@ def rand_factor():
 def rand_expr_factor():
     expr = rand_expr()
     global bracket_dep
+    global difficulty
     bracket_dep -= 1
+    difficulty += 1
     if random.random() < 0.4:
         return '(' + expr + ')'
     return '(' + expr + ') ' + rand_index()
@@ -160,16 +162,16 @@ def rand_index():
     rate = random.randint(0, 100)
     sign = random.choice(['', '+'])
     pre0 = '0' * random.randint(0, 5)
-    if rate > 95:
+    if rate > 99:
         num = str(8)
-    elif rate > 75:
+    elif rate > 80:
         num = str(random.randint(5, 8))
-    elif rate > 40:
+    elif rate > 60:
         num = str(random.randint(3, 6))
     elif rate > 30:
         num = str(0)
     else:
-        num = str(random.randint(0, 5))
+        num = str(random.randint(0, 3))
     return '**' + rand_space() + sign + pre0 + num
 
 

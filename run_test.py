@@ -5,7 +5,7 @@ from util.judge import judge, run_sh
 
 
 # Setting
-TURN = 0  # 0 run data/data.dat，0+ run gen_xc.py
+TURN = 100  # 0 run data/data.dat，0+ run gen_xc.py
 SH_EXEC_LIST = [
     [['zsh', '../OOLab1/run.sh'], '../OOLab1'],
 ]
