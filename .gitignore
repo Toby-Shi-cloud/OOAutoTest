@@ -1,9 +1,20 @@
+# IDE
 .fleet
 .vscode
 .idea
 
+# bin
 *.jar
 dist
 score.csv
 
+# python cache
+*.pyc
+*.pyd
+__pycache__
+
+# to avoid modify run_test.py carelessly
+run_test.py
+
+# .DS_Store
 .DS_Store
