@@ -1,3 +1,4 @@
+import sys
 import leancloud
 import pandas as pd
 from hashlib import md5
@@ -26,18 +27,23 @@ def main():
             for istr in TESTCASES:
                 ostr = run_jar(jar_name, istr)
                 istr_hash = md5(istr.encode('utf-8')).hexdigest()
-                if judge(istr, ostr):
-                    lp = len(ostr.strip())
-                    try:
-                        lmin = fetch(istr_hash, lp)
-                    except leancloud.LeanCloudError as e:
-                        print('Error:', e)
-                        print('Something went wrong...')
-                        print('Maybe you can check your network and retry...')
-                        break
-                    df.loc[len(df.index)] = [istr_hash, 'Accepted', lp, lmin, get_grade(lp, lmin, 20), deal(istr), deal(ostr)]
-                else:
-                    df.loc[len(df.index)] = [istr_hash, 'Wrong Answer', None, None, 0.0, deal(istr), deal(ostr)]
+                try:
+                    if judge(istr, ostr):
+                        lp = len(ostr.strip())
+                        try:
+                            lmin = fetch(istr_hash, lp)
+                        except leancloud.LeanCloudError as e:
+                            print('Error:', e)
+                            print('Something went wrong...')
+                            print('Maybe you can check your network and retry...')
+                            break
+                        df.loc[len(df.index)] =\
+                            [istr_hash, 'Accepted', lp, lmin, get_grade(lp, lmin, 20), deal(istr), deal(ostr)]
+                    else:
+                        df.loc[len(df.index)] = [istr_hash, 'Wrong Answer', None, None, 0.0, deal(istr), deal(ostr)]
+                except RecursionError:
+                    print('Recursion Overflow!', file=sys.stderr)
+                    df.loc[len(df.index)] = [istr_hash, 'Recursion Overflow', None, None, None, deal(istr), deal(ostr)]
                 bar()
     except KeyboardInterrupt:
         print('KeyboardInterrupt!')

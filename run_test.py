@@ -1,24 +1,28 @@
 import re
 import data
+from gen.gen_xc import generate_expr
 from util.judge import judge, run_sh
 
 
 # Setting
+TURN = 0  # 0 run data/data.dat，0+ run gen_xc.py
 SH_EXEC_LIST = [
     [['zsh', '../OOLab1/run.sh'], '../OOLab1'],
 ]
 
 
-# Parse Leading Zero
-def parse_leading_zero(s: str):
-    pattern = re.compile(r'(\D)0+(\d)')
-    return pattern.sub(r'\g<1>\g<2>', s)
+def gen_many_data():
+    global TURN
+    while TURN:
+        TURN -= 1
+        yield generate_expr()
 
 
 # main
 if __name__ == '__main__':
     turn = 0
-    for istr in data.TESTCASES:
+    testcases = data.TESTCASES if TURN == 0 else gen_many_data()
+    for istr in testcases:
         print('#' + str(turn) + ':')
         print('Input:')
         print(istr.strip())

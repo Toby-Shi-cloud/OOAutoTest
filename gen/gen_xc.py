@@ -10,18 +10,16 @@ bracket_dep = 0
 func_used = False
 
 
-def generate_expr(num):  # 注释掉就当数据生成器用
-    f = open("in.txt", "w")
-    for i in range(num):
-        f.write(rand_def_func())
-        func_list.clear()
-        func_def_list.clear()
-        num_of_var.clear()
-        expr = rand_expr()
-        while len(expr.replace(" |\\t", "")) < 10 * i:
-            op = random.choice(['+', '-'])
-            expr += op + rand_space() + rand_term()
-        f.write(expr + '\n')
+def generate_expr():
+    res = rand_def_func()
+    func_list.clear()
+    func_def_list.clear()
+    num_of_var.clear()
+    expr = rand_expr()
+    while len(expr.replace(' ', '').replace('\t', '')) < 10 * random.randint(1, 5):
+        op = random.choice(['+', '-'])
+        expr += op + rand_space() + rand_term()
+    return res + expr + '\n'
 
 
 # 生成函数定义
