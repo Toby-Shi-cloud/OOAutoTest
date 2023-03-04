@@ -8,6 +8,13 @@ from data import TESTCASES
 from util.judge import run_jar, judge, get_grade
 
 
+def deal(s: str):
+    if len(s) <= 1000:
+        return s
+    else:
+        return s[:1000] + f"\n(Too long. {len(s)} bytes.)"
+
+
 def main():
     print('===== Program Begin =====')
     jar_name = input('Please input your jar file name: ')
@@ -28,9 +35,9 @@ def main():
                         print('Something went wrong...')
                         print('Maybe you can check your network and retry...')
                         break
-                    df.loc[len(df.index)] = [istr_hash, 'Accepted', lp, lmin, get_grade(lp, lmin, 20), istr, ostr]
+                    df.loc[len(df.index)] = [istr_hash, 'Accepted', lp, lmin, get_grade(lp, lmin, 20), deal(istr), deal(ostr)]
                 else:
-                    df.loc[len(df.index)] = [istr_hash, 'Wrong Answer', None, None, 0.0, istr, ostr]
+                    df.loc[len(df.index)] = [istr_hash, 'Wrong Answer', None, None, 0.0, deal(istr), deal(ostr)]
                 bar()
     except KeyboardInterrupt:
         print('KeyboardInterrupt!')
