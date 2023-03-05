@@ -1,3 +1,7 @@
+## 重要！！
+
+请不要随便 `git add .` 或一键提交全部已更改文件。如想要提交，请认真检查自己修改的内容后，只提交该文件。
+
 ## 关于提交新数据
 
 直接加在 `data/data.dat` 后面，然后单独 `git add data/data.dat` 即可。
@@ -8,9 +12,19 @@
 
 - `main.py`
 > main.py 运行全部 data/data.dat 中的数据并将结果上传 lean cloud，并生成 score.csv。
+>
+> 使用指南/配置
+>
+> 现已升级至 cpp 评测机 (beta)，若要该用原有的 sympy 评测机，将 12 行 `from util.judge import judge_cpp as judge` 改为 `from util.judge import judge` 即可。
+>
+> cpp 评测机位于 cpp 目录下。请自行尝试编译使用。
+> （我才不会告诉你我没有上传可执行文件的原因是我 gcc 编译失败了）
 
 - `run_test.py`
-> run_test.py 将在本地运行全部 data/data.dat 中的数据。  
+> run_test.py 将在本地运行数据。
+>
+> 使用指南/配置
+>
 > run_test.py 的 SH_EXEC_LIST 可以添加多个程序供同时测试，填写方法：
 ```python
 SH_EXEC_LIST = [
