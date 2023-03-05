@@ -40,7 +40,7 @@ def judge(s1: str, s2: str):
         k = k.replace(' ', '').replace('\t', '')
         matcher = re.match(r'(?P<name>[fgh])\((?P<param>.*?)\)=(?P<expr>.*)', k)
         if matcher is None:
-            raise ValueError("Unkonw Error: " + str(fc))
+            raise ValueError("Unknown Error: " + str(fc))
         temp = eval('lambda ' + matcher.groupdict()['param'] + ': ' + matcher.groupdict()['expr'])
         if matcher.groupdict()['name'] == 'f':
             f = temp
@@ -71,11 +71,11 @@ def run_jar(jar: str, istr: str):
     with Popen(args=['java', '-jar', jar], encoding='utf-8', stdin=PIPE, stdout=PIPE, stderr=PIPE) as proc:
         try:
             ostr, estr = proc.communicate(input=istr, timeout=15)
-        except TimeoutExpired:
+        except TimeoutExpired as e:
             proc.kill()
-            return ''
+            raise e
     if estr:
-        print(Fore.RED + Back.BLACK + estr, file=sys.stderr)
+        print(Fore.RED + Back.BLACK + estr + Fore.RESET + Back.RESET, file=sys.stderr)
     return ostr
 
 
@@ -84,11 +84,11 @@ def run_sh(sh: list[str], istr: str, cwd='.'):
     with Popen(args=sh, cwd=cwd, encoding='utf-8', stdin=PIPE, stdout=PIPE, stderr=PIPE) as proc:
         try:
             ostr, estr = proc.communicate(input=istr, timeout=15)
-        except TimeoutExpired:
+        except TimeoutExpired as e:
             proc.kill()
-            return ''
+            raise e
     if estr:
-        print(Fore.RED + Back.BLACK + estr, file=sys.stderr)
+        print(Fore.RED + Back.BLACK + estr + Fore.RESET + Back.RESET, file=sys.stderr)
     return ostr
 
 

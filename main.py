@@ -3,6 +3,7 @@ import leancloud
 import pandas as pd
 from hashlib import md5
 from alive_progress import alive_bar
+from subprocess import TimeoutExpired
 from func_timeout.exceptions import FunctionTimedOut
 
 from network import fetch
@@ -29,9 +30,7 @@ def main():
                 ostr = run_jar(jar_name, istr)
                 istr_hash = md5(istr.encode('utf-8')).hexdigest()
                 try:
-                    if ostr == '':
-                        df.loc[len(df.index)] = [istr_hash, 'Time Limit Exceeded', None, None, 0.0, deal(istr), None]
-                    elif judge(istr, ostr):
+                    if judge(istr, ostr):
                         lp = len(ostr.strip())
                         try:
                             lmin = fetch(istr_hash, lp)
@@ -53,6 +52,9 @@ def main():
                 except FunctionTimedOut:
                     print('Judge timed out after 60 seconds.', file=sys.stderr)
                     df.loc[len(df.index)] = [istr_hash, 'Judge Timeout', None, None, None, deal(istr), deal(ostr)]
+                except TimeoutExpired as e:
+                    print(e, file=sys.stderr)
+                    df.loc[len(df.index)] = [istr_hash, 'Time Limit Exceeded', None, None, 0.0, deal(istr), None]
                 bar()
     except KeyboardInterrupt:
         print('KeyboardInterrupt!')
