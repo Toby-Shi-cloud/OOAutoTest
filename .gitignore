@@ -8,6 +8,8 @@
 *.zip
 dist
 score.csv
+judge
+*.exe
 
 # python cache
 *.pyc

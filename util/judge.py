@@ -6,6 +6,7 @@ from colorama import Fore, Back
 from util.checker import check_all
 from func_timeout import func_set_timeout
 from subprocess import Popen, PIPE, TimeoutExpired
+from func_timeout.exceptions import FunctionTimedOut
 
 
 COMPARE_COUNT = 10000
@@ -66,17 +67,31 @@ def judge(s1: str, s2: str):
         return False
 
 
-def run_jar(jar: str, istr: str):
-    istr += '\n'
-    with Popen(args=['java', '-jar', jar], encoding='utf-8', stdin=PIPE, stdout=PIPE, stderr=PIPE) as proc:
+@func_set_timeout(60)
+def judge_cpp(s1: str, s2: str):
+    s1 = s1.strip()
+    s2 = s2.strip()
+    if len(s2) > 1000000:
+        raise OutputLimitExceeded(f'Output Limit Exceeded! ({len(s2)} bytes)')
+    try:
+        check_all(s2)
+    except ValueError as e:
+        print(e, file=sys.stderr)
+        return False
+    with Popen(args=['./cpp/judge'], encoding='utf-8', stdin=PIPE, stdout=PIPE, stderr=PIPE) as proc:
         try:
-            ostr, estr = proc.communicate(input=istr, timeout=15)
-        except TimeoutExpired as e:
+            ostr, estr = proc.communicate(input=s1 + '\n' + s2 + '\n', timeout=30)
+        except TimeoutExpired:
             proc.kill()
-            raise e
-    if estr:
-        print(Fore.RED + Back.BLACK + estr + Fore.RESET + Back.RESET, file=sys.stderr)
-    return ostr
+            raise FunctionTimedOut('cpp judge time out after 30s')
+    if ostr == 'Accepted!\n':
+        return True
+    print(Fore.RED + Back.BLACK + ostr + Fore.RESET + Back.RESET, file=sys.stderr)
+    return False
+
+
+def run_jar(jar: str, istr: str):
+    return run_sh(['java', '-jar', jar], istr)
 
 
 def run_sh(sh: list[str], istr: str, cwd='.'):
