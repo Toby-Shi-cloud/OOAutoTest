@@ -26,7 +26,7 @@ def parse_leading_zero(s: str):
 
 
 @func_set_timeout(60)
-def judge(s1: str, s2: str):
+def judge_sympy(s1: str, s2: str):
     """
     s1 - input str; s2 - output str;
     return True if s1 == s2 else False
@@ -86,7 +86,7 @@ def judge_cpp(s1: str, s2: str):
             raise FunctionTimedOut('cpp judge time out after 30s')
     if ostr == 'Accepted!\n':
         return True
-    print(Fore.RED + Back.BLACK + ostr + Fore.RESET + Back.RESET, file=sys.stderr)
+    print(Fore.RED + 'CPP JUDGE: ' + ostr.strip() + Fore.RESET, file=sys.stderr)
     return False
 
 
@@ -103,7 +103,7 @@ def run_sh(sh: list[str], istr: str, cwd='.'):
             proc.kill()
             raise e
     if estr:
-        print(Fore.RED + Back.BLACK + estr + Fore.RESET + Back.RESET, file=sys.stderr)
+        print(Fore.RED + 'STDERR: ' + estr.strip() + Fore.RESET, file=sys.stderr)
     return ostr
 
 

@@ -1,42 +1,56 @@
-import re
+import json
 import data
 from gen.gen_xc import generate_expr
-from util.judge import judge, run_sh
+from util.judge import judge_sympy, judge_cpp, run_sh
 
 
-# Setting
-TURN = -1  # 0 run data/data.dat，0+ run gen_xc.py, -1 run single test
-SH_EXEC_LIST = [
-    [['zsh', '../OOLab1/run.sh'], '../OOLab1'],
-]
-SINGLE_TEST = '''3
-h(z , x ,y)=+ +-00740-  ++002 * -0001 * +0000 * -0000 * +428* +002 -  -00549 * 00057341*+1* -00321 * +3- +61771 *+00819*-00082343*-3 * +000528 * +002 * -0149
-f (y) =--+858 * +0002 *466* 338*+00829- +-000825 * -00921* -0001* 0001 * 002+  --0001 * 000677* 00605 *02 * y **+03 *y ** +00003+ -+048760 *+0002* +00062287 *+071721* y
-g(x, z, y)= + -2*0000
-- ++000984 *0078770 * -003*+0527*-003 * +0002 * 3+  ++001 *3 * -75442* -1'''
+config = json.load(open('config.json'))
+turn = config['turn']
+output = config['output']
+sh_exec_list = config['sh_exec_list']
 
 
 def gen_many_data():
-    global TURN
-    while TURN:
-        TURN -= 1
+    gen_curturn = 0
+    while gen_curturn < turn:
+        gen_curturn += 1
         yield generate_expr()
 
 
 # main
 if __name__ == '__main__':
-    turn = 0
-    testcases = data.TESTCASES if TURN == 0 else gen_many_data() if TURN > 0 else [SINGLE_TEST]
+    if turn == -1:
+        testcases = [open('single_testcase.txt').read()]
+    elif turn == 0:
+        testcases = data.TESTCASES
+    elif turn > 0:
+        testcases = gen_many_data()
+    else:
+        raise ValueError('Config Error: turn must be 0, -1 or positive integer')
+
+    if config['judge'] == 'sympy':
+        judge = judge_sympy
+    elif config['judge'] == 'cpp':
+        judge = judge_cpp
+    else:
+        raise ValueError('Config Error: judge must be sympy or cpp')
+
+    curturn = 0
     for istr in testcases:
-        print('#' + str(turn) + ':')
+        print('#' + str(curturn) + ':')
         print('Input:')
         print(istr.strip())
-
-        for sh_ in SH_EXEC_LIST:
+        flag = False
+        for sh_ in sh_exec_list:
             ostr = run_sh(sh_[0], istr, sh_[1])
+            if output == 'any':
+                print(sh_, 'Output:', ostr.strip())
             if not judge(istr, ostr):
-                print('Output:', ostr)
+                if output == 'error':
+                    print('Output:', ostr.strip())
                 print('Wrong Answer!', sh_[0])
-                exit(-1)
-        turn += 1
+                flag = True
+        if flag:
+            exit(-1)
+        curturn += 1
         print()

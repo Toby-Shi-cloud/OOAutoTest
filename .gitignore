@@ -16,8 +16,9 @@ judge
 *.pyd
 __pycache__
 
-# to avoid modify run_test.py carelessly
-run_test.py
+# config
+config.json
+single_testcase.txt
 
 # .DS_Store
 .DS_Store

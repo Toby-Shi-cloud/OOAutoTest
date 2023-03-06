@@ -1,0 +1,50 @@
+{
+    "?how_to_use": [
+        "配置使用指南：请勿直接更改本文件，请将本文件复制并重命名为 config.json，然后再进行配置",
+        "本文件中所有以 ? 开头的对象均为注释",
+        "run_test.py 相关的属性有：turn, sh_exec_list, judge, output",
+        "main.py 相关的属性有：judge, main_exec"
+    ],
+
+    "?turn": [
+        "turn 属性注释：请填写 -1, 0 或 一个正整数<x>",
+        "-1 表示运行 single_testcase.txt 中的第一组数据",
+        "0 表示运行 data/data.dat 中的全部数据",
+        "<x> 表示运行 gen/gen_xc.py 随机生成的 <x> 组数据"
+    ],
+    "turn": -1,
+
+    "?sh_exec_list": [
+        "sh_exec_list 属性注释：请填写一个数组，该数组的元素也是数组，详见下列解释",
+        "对于 sh_exec_list 的每一个元素 [args, cwd]",
+        "arg 表示运行参数，建议为一个数组（Windows下使用字符串也可以运行）",
+        "cwd 表示运行目录，建议为 jar包 或 mainclass 或 shell脚本 所在路径",
+        "详见下面示例",
+        "sh_exec_list 指明了 run_test.py 会测试哪些程序"
+    ],
+    "sh_exec_list": [
+        [["java", "-jar", "Assassin.jar"], "../Assassin"],
+        [["java", "MainClass"], "../Caster"],
+        [["bash", "run.sh"], "."]
+    ],
+
+    "?output": [
+        "output 属性注释：请填写 error 或 any",
+        "error 表示 run_test.py 展示程序输出，当且仅当测试比对失败时",
+        "any 表示 run_test.py 任何时候都会展示程序输出"
+    ],
+    "output": "error",
+
+    "?judge": [
+        "judge 属性注释：请填写 sympy 或 cpp",
+        "sympy 表示 使用 sympy 进行评测",
+        "cpp 表示 使用 cpp 评测机评测，请将 cpp 评测机的可执行文件放置于 cpp 目录下，且命名为 judge (Windows 上为 judge.exe)"
+    ],
+    "judge": "sympy",
+
+    "?main_exec": [
+        "main_exec 属性注释：请填写一个数组，该数组填写规则参考 sh_exec_list 中的任何一项",
+        "main_exec 指明了 main.py 会测试哪些程序"
+    ],
+    "main_exec": [["bash", "run.sh"], "."]
+}

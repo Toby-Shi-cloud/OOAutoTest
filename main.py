@@ -1,4 +1,5 @@
 import sys
+import json
 import leancloud
 import pandas as pd
 from hashlib import md5
@@ -8,8 +9,7 @@ from func_timeout.exceptions import FunctionTimedOut
 
 from network import fetch
 from data import TESTCASES
-from util.judge import run_jar, get_grade, OutputLimitExceeded
-from util.judge import judge_cpp as judge  # change to "from util.judge import judge as judge" to use sympy.
+from util.judge import judge_cpp, judge_sympy, run_sh, get_grade, OutputLimitExceeded
 
 
 def deal(s: str):
@@ -21,14 +21,22 @@ def deal(s: str):
 
 def main():
     print('===== Program Begin =====')
-    jar_name = input('Please input your jar file name: ')
+    config = json.load(open('config.json'))
+    exec_name = config['main_exec']
+
+    if config['judge'] == 'sympy':
+        judge = judge_sympy
+    elif config['judge'] == 'cpp':
+        judge = judge_cpp
+    else:
+        raise ValueError('Config Error: judge must be sympy or cpp')
 
     print('===== Test Begin =====')
     df = pd.DataFrame(columns=['Testcase Hash', 'Status', 'Lp', 'Lmin', 'Performance', 'Input', 'Output'])
     try:
         with alive_bar(len(TESTCASES)) as bar:
             for istr in TESTCASES:
-                ostr = run_jar(jar_name, istr)
+                ostr = run_sh(exec_name[0], istr, exec_name[1])
                 istr_hash = md5(istr.encode('utf-8')).hexdigest()
                 try:
                     if judge(istr, ostr):
