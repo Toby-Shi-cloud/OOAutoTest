@@ -7,8 +7,8 @@ from alive_progress import alive_bar
 from subprocess import TimeoutExpired
 from func_timeout.exceptions import FunctionTimedOut
 
-from network import fetch
 from data import TESTCASES
+from network.cloud import fetch
 from util.judge import judge_cpp, judge_sympy, run_sh, get_grade, OutputLimitExceeded
 
 

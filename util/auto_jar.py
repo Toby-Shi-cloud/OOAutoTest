@@ -4,8 +4,8 @@ import shutil
 
 
 def unzip(zip_file, dest_dir):
-    '''Unzip a file to a destination directory and delete the zip file.
-    '''
+    """Unzip a file to a destination directory and delete the zip file.
+    """
     if not os.path.exists(dest_dir):
         os.makedirs(dest_dir)
     with zipfile.ZipFile(zip_file, 'r') as z:
@@ -14,16 +14,16 @@ def unzip(zip_file, dest_dir):
 
 
 def compile_java(src_path, class_path, java_files):
-    '''Compile java files in src_path and output to class_path.
-    '''
+    """Compile java files in src_path and output to class_path.
+    """
     cmd = 'javac -encoding UTF-8 -d %s -cp %s %s' % (class_path,
                                                      src_path, ' '.join(java_files))
     os.system(cmd)
 
 
 def create_MANIFEST(class_path, main_class):
-    '''Create a MANIFEST file.
-    '''
+    """Create a MANIFEST file.
+    """
     manifest = os.path.join(class_path, 'MY_MANIFEST.MF')
     with open(manifest, 'w') as f:
         f.write('Manifest-Version: 1.0\n')
@@ -33,8 +33,8 @@ def create_MANIFEST(class_path, main_class):
 
 
 def make_jar(src_path, jar_file, manifest='MY_MANIFEST.MF'):
-    '''Create a jar file from a class path.
-    '''
+    """Create a jar file from a class path.
+    """
     cmd = 'jar cvfm %s %s -C %s .' % (jar_file, manifest, src_path)
     os.system(cmd)
 
