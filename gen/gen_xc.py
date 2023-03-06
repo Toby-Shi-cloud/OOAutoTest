@@ -7,9 +7,14 @@ func_def_list = []
 num_of_var = []
 var_list = []
 
+def_func = False
 func_used = False
+expr_index = False
+expr_used = False
+trig_deep = 0
 difficulty = 0
 bracket_dep = 0
+diff_of_func = 0
 # 难度平衡全局变量
 
 
@@ -32,22 +37,26 @@ def generate_expr():
 
 # 生成函数定义
 def rand_def_func():
-    global func_used
+    global def_func
     global func_list
     global difficulty
-    func_used = True
+    global diff_of_func
+    def_func = True
     func_dic = ['f', 'g', 'h']
     func_list = random.sample(func_dic, random.randint(1, 3))
     func_num = len(func_list)
     def_str = str(len(func_list)) + '\n'
+    difficulty = 0
     for i in range(0, func_num):
         var_str = rand_var()
         num_of_var.append(len(var_list))
-        difficulty = 2
         func_def_list.append(rand_expr())
+        diff_of_func += difficulty
+        difficulty = 0
         def_str += func_list[i] + rand_space() + '(' + var_str[0:len(var_str)] + ')' + rand_space() + '=' + \
                    func_def_list[i] + '\n'
-    func_used = False
+    diff_of_func = int(diff_of_func/4)
+    def_func = False
     return def_str
 
 
@@ -68,7 +77,7 @@ def rand_var():
 def rand_expr():
     op = random.choice(['+', '-'])
     final_expr = rand_space() + op + rand_term() + rand_space()
-    term_num = random.randint(0,  0 if 4-difficulty-2*func_used < 0 else 4-difficulty-2*func_used)
+    term_num = random.randint(0, 0 if 4 - 2*expr_used - diff_of_func - 3 * def_func - 2*func_used < 0 else 4 - int(difficulty/3) - 3 * def_func - 2*func_used)
     for i in range(0, term_num):
         op = random.choice(['+', '-'])
         final_expr += op + rand_space() + rand_term() + rand_space()
@@ -78,7 +87,7 @@ def rand_expr():
 def rand_term():
     op = random.choice(['+', '-'])
     final_term = rand_space() + op + rand_factor()
-    factor_num = random.randint(0, 0 if 6-difficulty-3*func_used < 0 else 6-difficulty-3*func_used)
+    factor_num = random.randint(0, 0 if 4 - 2*expr_used - diff_of_func - difficulty - 2 * def_func - 2*func_used < 0 else 4 - diff_of_func - 2 * def_func - 2*func_used)
     for i in range(0, factor_num):
         final_term += rand_space() + "*" + rand_space() + rand_factor()
     return final_term
@@ -89,10 +98,10 @@ def rand_factor():
     choice = random.choice(['var', 'const', 'expr'])
     ran_num = random.random()
     global bracket_dep
-    if ran_num < 0.20 - 0.05 * bracket_dep - 0.02*difficulty - 0.05*func_used:
+    if ran_num < 0.25 - 0.07 * bracket_dep - 0.03*difficulty - 0.03 * diff_of_func - 0.02*def_func - 0.02*func_used:
         bracket_dep += 1
         return rand_expr_factor()
-    elif ran_num < 0.45 + 0.03*difficulty:
+    elif ran_num < 0.50 + 0.03*difficulty + 0.03*diff_of_func:
         return rand_signed_int()
     else:
         return rand_var_factor()
@@ -100,14 +109,22 @@ def rand_factor():
 
 # 生成表达式因子
 def rand_expr_factor():
-    expr = rand_expr()
     global bracket_dep
     global difficulty
-    bracket_dep -= 1
+    global expr_index
+    global expr_used
+    expr_used = True
     difficulty += 1
-    if random.random() < 0.4 + 0.05*difficulty + 0.2*func_used:
+    expr = rand_expr()
+    bracket_dep -= 1
+    expr_used = False
+    if random.random() < 0.5 + 0.05*difficulty + 0.1*def_func + 0.05*diff_of_func:
         return '(' + expr + ')'
-    return '(' + expr + ') ' + rand_index()
+    else:
+        expr_index = True
+        final_expr = '(' + expr + ') ' + rand_index()
+        expr_index = False
+        return final_expr
 
 
 # 生成带符号整数
@@ -120,16 +137,16 @@ def rand_signed_int():
 def rand_var_factor():
     choice = random.choice(['pow', 'tri', 'def'])
     ran_num = random.random()
-    global func_used
+    global def_func
     global difficulty
     # if ran_num < 0.50:
     #     return rand_trig()
     # else:
     #     return rand_power()
-    if ran_num < 0.25 - 0.03*difficulty and not func_used and len(func_list) != 0:
+    if ran_num < 0.25 - 0.03*difficulty - 0.05*func_used - 0.05*diff_of_func and not def_func and len(func_list) != 0:
         difficulty += 1
         return rand_func()
-    elif ran_num < 0.55 - 0.05*difficulty:
+    elif ran_num < 0.45 - 0.07*difficulty - 0.1*trig_deep - 0.05*diff_of_func:
         return rand_trig()
     else:
         return rand_power()
@@ -138,7 +155,7 @@ def rand_var_factor():
 # 生成幂函数
 def rand_power():
     base = random.choice(var_list)
-    if random.random() < 0.40 + 0.03*difficulty:
+    if random.random() < 0.5 + 0.05*difficulty:
         return base
     else:
         return base + rand_space() + rand_index()
@@ -146,9 +163,12 @@ def rand_power():
 
 # 生成三角函数
 def rand_trig():
+    global trig_deep
+    trig_deep += 1
     func = random.choice(['sin', 'cos'])
     fun_str = func + rand_space() + '(' + rand_space() + rand_factor() + rand_space() + ')'
-    if random.random() < 0.40 + 0.03*difficulty:
+    trig_deep -= 1
+    if random.random() < 0.5 + 0.05*difficulty:
         return fun_str
     else:
         return fun_str + rand_index()
@@ -156,6 +176,8 @@ def rand_trig():
 
 # 生成函数调用
 def rand_func():
+    global func_used
+    func_used = True
     func_name = random.choice(func_list)
     var_num = num_of_var[func_list.index(func_name)]
     func_str = func_name + rand_space() + '(' + rand_space()
@@ -163,6 +185,7 @@ def rand_func():
     for i in range(1, var_num):
         func_str += ',' + rand_space() + rand_factor() + rand_space()
     func_str += ')'
+    func_used = False
     return func_str
 
 
@@ -172,33 +195,36 @@ def rand_index():
     sign = random.choice(['', '+'])
     pre0 = '0' * random.randint(0, 5)
     global difficulty
-    if rate > 95 + difficulty + 1*func_used:
-        difficulty += 1
+    if rate > 95 + difficulty + 2*def_func + 2*func_used + (diff_of_func > 1) + (diff_of_func > 3) + 3*expr_index:
+        difficulty += 2
         num = str(8)
-    elif rate > 75 + 3*difficulty + 5*func_used:
+    elif rate > 75 + 3*difficulty + 5*def_func + 5*func_used + 5*(diff_of_func > 1) + 10*(diff_of_func > 3) + 10*expr_index:
+        difficulty += 1
         num = str(random.randint(5, 8))
-    elif rate > 40 + 3*difficulty + 5*func_used:
-        num = str(random.randint(3, 6))
-    elif rate > 30:
-        num = str(0)
+    elif rate > 40 + 3*difficulty + 5*def_func + 3*func_used + 20*expr_index + 3*(diff_of_func > 1):
+        num = str(random.randint(3, 5))
+    elif rate > 30 + 2*difficulty + 3*def_func + 2*func_used:
+        num = str(random.randint(1, 3))
     else:
-        num = str(random.randint(0, 3))
+        num = str(random.randint(0, 2))
     return '**' + rand_space() + sign + pre0 + num
 
 
 # 生成随机整数，可以包含前导零
 def rand_int():
     rate = random.randint(0, 100)
-    pre0 = "0" * random.randint(0, 3)
+    pre0 = ''
+    # pre0 = "0" * random.randint(0, 3)
     global difficulty
-    if rate > 95 + 2*difficulty + 1*func_used:
+    # return str(random.randint(0, 100))
+    if rate > 95 + difficulty + 1*def_func + 1*func_used + (difficulty > 10):
         difficulty += 1
         return pre0 + str(random.randint(99999999, 99999999999))
-    elif rate > 70 + 3*difficulty:
+    elif rate > 70 + 4*difficulty:
         return pre0 + str(random.randint(9999, 99999))
     elif rate > 60:
         return pre0 + str(random.randint(99, 999))
-    elif rate > 30 + 3*difficulty:
+    elif rate > 30 + 5*difficulty:
         return pre0 + str(random.randint(0, 100))
     else:
         return pre0 + str(random.randint(0, 3))
@@ -207,17 +233,19 @@ def rand_int():
 # 生成空白项
 def rand_space():
     rate = random.randint(0, 100)
-    if rate > 95 + difficulty:
-        return ' ' * 3 + '\t' * 3
-    elif rate > 70 + 3*difficulty + 5*func_used:
-        return ' ' * 2 + '\t' * 1
-    elif rate > 55:
-        return ' ' * 1
-    elif rate > 40:
-        return '\t' * 1
-    else:
-        return ''
 
+    # if rate > 95 + difficulty:
+    #     return ' ' * 3 + '\t' * 3
+    # elif rate > 70 + 3*difficulty + 5*func_used:
+    #     return ' ' * 2 + '\t' * 1
+    # elif rate > 55:
+    #     return ' ' * 1
+    # elif rate > 40:
+    #     return '\t' * 1
+    # else:
+    #     return ''
+
+    return ""
 
 # generate_expr()
 # print(rand_expr())

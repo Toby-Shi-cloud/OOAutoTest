@@ -5,9 +5,9 @@ from util.judge import judge, run_sh
 
 
 # Setting
-TURN = -1  # 0 run data/data.dat，0+ run gen_xc.py, -1 run single test
+TURN = 100  # 0 run data/data.dat，0+ run gen_xc.py, -1 run single test
 SH_EXEC_LIST = [
-    [['zsh', '../OOLab1/run.sh'], '../OOLab1'],
+    [['java', '-jar', 'Expr_expansion2.jar'], 'D:/.oo_file/hw2/Expr_expansion2/out/artifacts/Expr_expansion2_jar'],
 ]
 SINGLE_TEST = '''3
 h(z , x ,y)=+ +-00740-  ++002 * -0001 * +0000 * -0000 * +428* +002 -  -00549 * 00057341*+1* -00321 * +3- +61771 *+00819*-00082343*-3 * +000528 * +002 * -0149
