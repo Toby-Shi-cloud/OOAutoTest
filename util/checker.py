@@ -66,7 +66,7 @@ def check_expr(s: str) -> str:
 
 
 def check_all(s: str):
-    s = s.strip()
+    s = s.replace(' ', '').replace('\t', '')
     try:
         s = check_expr(s)
         if s != '':

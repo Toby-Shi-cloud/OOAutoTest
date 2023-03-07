@@ -17,6 +17,16 @@
 
 ## 如何使用
 
+- `get_jar.py`
+
+> get_jar.py 将自动获取你的房间的所有人的代码，并编译并打包为 jar
+>
+> 在获取代码过程中，可能需要你提供账号和密码，以及本次作业 id，本次作业 id 可在打开一个作业后在地址栏查看：
+> 如：`http://oo.buaa.edu.cn/assignment/418/intro`，则作业 id 为 `418`
+>
+> 注意：如果你不小心输入错误的账号或密码，并在下载中被提示 `Please login first!`，
+> 则请删除 `network/login/cache/sso.cache` 重置 cookie
+
 - `main.py`
 
 > main.py 运行全部 data/data.dat 中的数据并将结果上传 lean cloud，并生成 score.csv。
