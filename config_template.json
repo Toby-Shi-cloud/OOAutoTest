@@ -12,7 +12,7 @@
         "0 表示运行 data/data.dat 中的全部数据",
         "<x> 表示运行 gen/gen_xc.py 随机生成的 <x> 组数据"
     ],
-    "turn": -1,
+    "turn": 0,
 
     "?sh_exec_list": [
         "sh_exec_list 属性注释: 请填写一个数组, 该数组的元素也是数组, 详见下列解释",
