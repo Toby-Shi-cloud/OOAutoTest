@@ -2,7 +2,7 @@ import re
 import sys
 import sympy
 from sympy import sin, cos
-from colorama import Fore, Back
+from colorama import Fore
 from util.checker import check_all
 from func_timeout import func_set_timeout
 from subprocess import Popen, PIPE, TimeoutExpired

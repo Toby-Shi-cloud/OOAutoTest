@@ -1,7 +1,10 @@
 import json
 import data
+from colorama import Fore
+from subprocess import TimeoutExpired
+from func_timeout.exceptions import FunctionTimedOut
 from gen.gen_xc import generate_expr
-from util.judge import judge_sympy, judge_cpp, run_sh
+from util.judge import judge_sympy, judge_cpp, run_sh,OutputLimitExceeded
 
 
 config = json.load(open('config.json', encoding='utf-8'))
@@ -42,14 +45,33 @@ if __name__ == '__main__':
         print(istr.strip())
         flag = False
         for sh_ in sh_exec_list:
-            ostr = run_sh(sh_[0], istr, sh_[1])
-            if output == 'any':
-                print(sh_, 'Output:', ostr.strip())
-            if not judge(istr, ostr):
-                if output == 'error':
-                    print('Output:', ostr.strip())
-                print('Wrong Answer!', sh_[0])
+            try:
+                ostr = run_sh(sh_[0], istr, sh_[1])
+                if output == 'any':
+                    print(sh_, 'Output:', ostr.strip())
+                if not judge(istr, ostr):
+                    if output == 'error':
+                        print('Output:', ostr.strip())
+                    print(Fore.RED + 'Wrong Answer!', sh_[0])
+                    flag = True
+            except RecursionError as e:
+                print(Fore.RED)
+                print(e)
                 flag = True
+            except OutputLimitExceeded as e:
+                print(Fore.RED)
+                print(e)
+                flag = True
+            except FunctionTimedOut as e:
+                print(Fore.RED)
+                print('Judge timed out after 60 seconds.' if str(e)[:2] != 'cpp' else e)
+                flag = True
+            except TimeoutExpired as e:
+                print(Fore.RED)
+                print(e)
+                flag = True
+            finally:
+                print(Fore.RESET)
         if flag:
             exit(-1)
         curturn += 1
