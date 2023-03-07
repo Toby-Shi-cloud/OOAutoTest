@@ -4,7 +4,7 @@ from gen.gen_xc import generate_expr
 from util.judge import judge_sympy, judge_cpp, run_sh
 
 
-config = json.load(open('config.json'))
+config = json.load(open('config.json', encoding='utf-8'))
 turn = config['turn']
 output = config['output']
 sh_exec_list = config['sh_exec_list']

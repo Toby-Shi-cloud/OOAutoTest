@@ -9,9 +9,9 @@ if __name__ == '__main__':
     auto_jar(os.path.join('temp', 'zip'))
 
     try:
-        config = json.load(open('config.json'))
+        config = json.load(open('config.json', encoding='utf-8'))
     except FileExistsError:
-        config = json.load(open('config_template.json'))
+        config = json.load(open('config_template.json', encoding='utf-8'))
     if 'sh_exec_list.bk' not in config.keys():
         config['sh_exec_list.bk'] = config['sh_exec_list']
     config['sh_exec_list'] = []

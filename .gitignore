@@ -21,7 +21,7 @@ jar
 __pycache__
 
 # config
-config.json
+./config.json
 single_testcase.txt
 sso.cache
 

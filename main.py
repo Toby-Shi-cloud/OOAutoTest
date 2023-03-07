@@ -21,7 +21,7 @@ def deal(s: str):
 
 def main():
     print('===== Program Begin =====')
-    config = json.load(open('config.json'))
+    config = json.load(open('config.json', encoding='utf-8'))
     exec_name = config['main_exec']
 
     if config['judge'] == 'sympy':
