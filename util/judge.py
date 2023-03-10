@@ -1,7 +1,6 @@
 import re
 import sys
 import sympy
-from sympy import sin, cos
 from colorama import Fore
 from util.checker import check_all
 from func_timeout import func_set_timeout
@@ -31,34 +30,52 @@ def judge_sympy(s1: str, s2: str):
     s1 - input str; s2 - output str;
     return True if s1 == s2 else False
     """
-    s1 = parse_leading_zero(' ' + s1)[1:].strip()
-    s2 = parse_leading_zero(' ' + s2)[1:].strip()
+    s1 = parse_leading_zero(' ' + s1).strip()
+    s2 = parse_leading_zero(' ' + s2).strip()
     if len(s2) > 200000:
         raise OutputLimitExceeded(f'Output Limit Exceeded! ({len(s2)} bytes)')
     fc = s1.split('\n')
+
+    x = sympy.Symbol('x')
+    y = sympy.Symbol('y')
+    z = sympy.Symbol('z')
+    sin = sympy.sin
+    cos = sympy.cos
+    dx = lambda expr: sympy.diff(expr, x)
+    dy = lambda expr: sympy.diff(expr, y)
+    dz = lambda expr: sympy.diff(expr, z)
     f, g, h = None, None, None
+    eval_set = {
+        'x': x, 'y': y, 'z': z,
+        'sin': sin, 'cos': cos,
+        'dx': dx, 'dy': dy, 'dz': dz,
+        'f': f, 'g': g, 'h': h
+    }
     for k in fc[1:-1]:
         k = k.replace(' ', '').replace('\t', '')
-        matcher = re.match(r'(?P<name>[fgh])\((?P<param>.*?)\)=(?P<expr>.*)', k)
+        matcher = re.match(r'^(?P<name>[fgh])\((?P<param>.*?)\)=(?P<expr>.*)$', k)
         if matcher is None:
             raise ValueError("Unknown Error: " + str(fc))
-        temp = eval('lambda ' + matcher.groupdict()['param'] + ': ' + matcher.groupdict()['expr'])
+        expr_of_func = eval(matcher.groupdict()['expr'], eval_set)
+        expr_of_func = sympy.simplify(expr_of_func)
+        temp = eval('lambda ' + matcher.groupdict()['param'] + ': ' + str(expr_of_func), eval_set)
         if matcher.groupdict()['name'] == 'f':
             f = temp
+            eval_set['f'] = f
         elif matcher.groupdict()['name'] == 'g':
             g = temp
+            eval_set['g'] = g
         elif matcher.groupdict()['name'] == 'h':
             h = temp
+            eval_set['h'] = h
         else:
             print(type(matcher.groupdict()['name']))
             print(matcher.groupdict()['name'])
             print(matcher.groupdict()['name'] == 'h')
+
     try:
         check_all(s2)
-        x = sympy.Symbol('x')
-        y = sympy.Symbol('y')
-        z = sympy.Symbol('z')
-        cccc = eval(fc[-1])
+        cccc = eval(fc[-1], eval_set)
         if isinstance(cccc, int):
             return cccc == eval(s2)
         return True if cccc.equals(eval(s2)) else False
