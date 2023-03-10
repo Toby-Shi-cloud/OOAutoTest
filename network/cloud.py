@@ -10,11 +10,11 @@ import leancloud
 
 
 leancloud.init('IhwWUFBgg9AE1wYqpTCOcBIz-gzGzoHsz', '6mI1DvuYjGKOjoy9h12dMn98')
-HW2 = leancloud.Object.extend('HW2')
+HW3 = leancloud.Object.extend('HW3')
 
 
 def fetch(sh: str, length: int):
-    query = HW2.query
+    query = HW3.query
     query.equal_to('hash', sh)
     data_list = query.find()
     if data_list:
@@ -26,7 +26,7 @@ def fetch(sh: str, length: int):
             return length
         return last_length
     else:
-        data = HW2()
+        data = HW3()
         data.set('hash', sh)
         data.set('lmin', length)
         data.save()
