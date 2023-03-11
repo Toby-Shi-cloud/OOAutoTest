@@ -22,7 +22,6 @@ __pycache__
 
 # config
 config.json
-!network/login/config/config.json
 single_testcase.txt
 sso.cache
 

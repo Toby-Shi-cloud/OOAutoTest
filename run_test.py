@@ -1,22 +1,17 @@
-import json
 import data
 from colorama import Fore
 from subprocess import TimeoutExpired
 from func_timeout.exceptions import FunctionTimedOut
+
 from gen.gen_xc import generate_expr
-from util.judge import judge_sympy, judge_cpp, run_sh,OutputLimitExceeded
-
-
-config = json.load(open('config.json', encoding='utf-8'))
-turn = config['turn']
-output = config['output']
-sh_exec_list = config['sh_exec_list']
+from util.judge import run_sh, OutputLimitExceeded
+from util.read_config import judge, turn, output, sh_exec_list
 
 
 def gen_many_data():
-    gen_curturn = 0
-    while gen_curturn < turn:
-        gen_curturn += 1
+    gen_cur_turn = 0
+    while gen_cur_turn < turn:
+        gen_cur_turn += 1
         yield generate_expr()
 
 
@@ -31,16 +26,9 @@ if __name__ == '__main__':
     else:
         raise ValueError('Config Error: turn must be 0, -1 or positive integer')
 
-    if config['judge'] == 'sympy':
-        judge = judge_sympy
-    elif config['judge'] == 'cpp':
-        judge = judge_cpp
-    else:
-        raise ValueError('Config Error: judge must be sympy or cpp')
-
-    curturn = 0
+    cur_turn = 0
     for istr in testcases:
-        print('#' + str(curturn) + ':')
+        print('#' + str(cur_turn) + ':')
         print('Input:')
         print(istr.strip())
         flag = False
@@ -48,11 +36,11 @@ if __name__ == '__main__':
             try:
                 ostr = run_sh(sh_[0], istr, sh_[1])
                 if output == 'any':
-                    print(sh_, 'Output:', ostr.strip())
+                    print(sh_[2], 'Output:', ostr.strip())
                 if not judge(istr, ostr):
                     if output == 'error':
-                        print('Output:', ostr.strip())
-                    print(Fore.RED + 'Wrong Answer!', sh_[0])
+                        print(sh_[2], 'Output:', ostr.strip())
+                    print(Fore.RED + 'Wrong Answer!', sh_[2])
                     flag = True
             except RecursionError as e:
                 print(Fore.RED)
@@ -74,5 +62,5 @@ if __name__ == '__main__':
                 print(Fore.RESET)
         if flag:
             exit(-1)
-        curturn += 1
+        cur_turn += 1
         print()

@@ -16,8 +16,8 @@ def unzip(zip_file, dest_dir):
 def compile_java(src_path, class_path, java_files):
     """Compile java files in src_path and output to class_path.
     """
-    cmd = 'javac -encoding UTF-8 -d %s -cp %s %s' % (class_path,
-                                                     src_path, ' '.join(java_files))
+    cmd = 'javac -encoding UTF-8 -d %s -cp %s %s' % (
+        class_path, src_path, ' '.join(java_files))
     os.system(cmd)
 
 
