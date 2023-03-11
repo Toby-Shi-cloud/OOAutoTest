@@ -230,7 +230,7 @@ def rand_index():
     #     num = str(random.randint(1, 3))
     # else:
     #     num = str(random.randint(0, 2))
-    if rate > 70:
+    if rate > 30:
         num = str(random.randint(0, 2))
     else:
         num = str(random.randint(1, 4))
