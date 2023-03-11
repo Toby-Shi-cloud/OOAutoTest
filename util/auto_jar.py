@@ -47,6 +47,8 @@ def auto_jar(zip_path):
         os.mkdir('jar')
 
     for zip_file in os.listdir(zip_path):
+        if not zip_file.endswith('.zip'):
+            continue
         project_path = os.path.join('temp', zip_file[:-4])
         class_path = os.path.join(project_path, 'classes')
         if not os.path.exists(class_path):
@@ -63,7 +65,14 @@ def auto_jar(zip_path):
                     with open(java_file, 'r', encoding='utf8') as f:
                         if 'public static void main' in f.read():
                             src_path = dirpath
-                            main_class = filename[:-5]
+                            f.buffer.seek(0)
+                            if 'package' in f.read():
+                                f.buffer.seek(0)
+                                main_class = f.read().split('package ')[1].split(';')[0] + '.' + filename[:-5]
+                            else:
+                                main_class = filename[:-5]
+                            else:
+                                main_class = filename[:-5]
                     java_files.append(java_file)
 
         if main_class == 'unknown':
