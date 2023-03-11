@@ -24,8 +24,7 @@ def generate_expr():
     global var_list
     global difficulty
     global deriv_used
-    global diff_of_func
-    global def_func_now
+    deriv_used = False
     res = rand_def_func()
     var_list = ['x', 'y', 'z']
     difficulty = 0
@@ -37,9 +36,6 @@ def generate_expr():
     func_def_list.clear()
     num_of_var.clear()
     var_list.clear()
-    deriv_used = False
-    diff_of_func = 0
-    def_func_now = 0
     return res + expr + '\n'
 
 
@@ -109,7 +105,7 @@ def rand_factor():
     ran_num = random.random()
     global bracket_dep
     global deriv_used
-    if ran_num < 0.2*(not deriv_used):
+    if ran_num < 0.1*(not deriv_used):
         deriv_used = True
         return rand_deriv_factor()
     elif ran_num < 0.25 + 0.15*(not deriv_used) - 0.07 * bracket_dep - 0.03*difficulty - 0.03 * diff_of_func - 0.02*(def_func_now >= 0) - 0.02*func_used:
@@ -218,18 +214,22 @@ def rand_index():
     pre0 = ''
     # pre0 = '0' * random.randint(0, 5)
     global difficulty
-    if rate > 95 + difficulty + 2*(def_func_now >= 0) + 2*func_used + (diff_of_func > 1) + (diff_of_func > 3) + 3*expr_index:
-        difficulty += 2
-        num = str(8)
-    elif rate > 75 + 3*difficulty + 5*(def_func_now >= 0) + 5*func_used + 5*(diff_of_func > 1) + 10*(diff_of_func > 3) + 10*expr_index:
-        difficulty += 1
-        num = str(random.randint(5, 8))
-    elif rate > 40 + 3*difficulty + 5*(def_func_now >= 0) + 3*func_used + 20*expr_index + 3*(diff_of_func > 1):
-        num = str(random.randint(3, 5))
-    elif rate > 30 + 2*difficulty + 3*(def_func_now >= 0) + 2*func_used:
-        num = str(random.randint(1, 3))
-    else:
+    # if rate > 95 + difficulty + 2*(def_func_now >= 0) + 2*func_used + (diff_of_func > 1) + (diff_of_func > 3) + 3*expr_index:
+    #     difficulty += 2
+    #     num = str(8)
+    # elif rate > 75 + 3*difficulty + 5*(def_func_now >= 0) + 5*func_used + 5*(diff_of_func > 1) + 10*(diff_of_func > 3) + 10*expr_index:
+    #     difficulty += 1
+    #     num = str(random.randint(5, 8))
+    # elif rate > 40 + 3*difficulty + 5*(def_func_now >= 0) + 3*func_used + 20*expr_index + 3*(diff_of_func > 1):
+    #     num = str(random.randint(3, 5))
+    # elif rate > 30 + 2*difficulty + 3*(def_func_now >= 0) + 2*func_used:
+    #     num = str(random.randint(1, 3))
+    # else:
+    #     num = str(random.randint(0, 2))
+    if rate > 70:
         num = str(random.randint(0, 2))
+    else:
+        num = str(random.randint(1, 4))
     return '**' + rand_space() + sign + pre0 + num
 
 
