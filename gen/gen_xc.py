@@ -23,6 +23,9 @@ diff_of_func = 0
 def generate_expr():
     global var_list
     global difficulty
+    global deriv_used
+    global diff_of_func
+    global def_func_now
     res = rand_def_func()
     var_list = ['x', 'y', 'z']
     difficulty = 0
@@ -34,6 +37,9 @@ def generate_expr():
     func_def_list.clear()
     num_of_var.clear()
     var_list.clear()
+    deriv_used = False
+    diff_of_func = 0
+    def_func_now = 0
     return res + expr + '\n'
 
 
