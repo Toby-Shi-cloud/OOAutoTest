@@ -57,7 +57,6 @@ def judge_sympy(s1: str, s2: str):
         if matcher is None:
             raise ValueError("Unknown Error: " + str(fc))
         expr_of_func = eval(matcher.groupdict()['expr'], eval_set)
-        expr_of_func = sympy.simplify(expr_of_func)
         temp = eval('lambda ' + matcher.groupdict()['param'] + ': ' + str(expr_of_func), eval_set)
         if matcher.groupdict()['name'] == 'f':
             f = temp
@@ -107,11 +106,7 @@ def judge_cpp(s1: str, s2: str):
     return False
 
 
-def run_jar(jar: str, istr: str):
-    return run_sh(['java', '-jar', jar], istr)
-
-
-def run_sh(sh: list[str], istr: str, cwd='.'):
+def run_sh(sh: list, istr: str, cwd='.'):
     istr += '\n'
     with Popen(args=sh, cwd=cwd, encoding='utf-8', stdin=PIPE, stdout=PIPE, stderr=PIPE) as proc:
         try:

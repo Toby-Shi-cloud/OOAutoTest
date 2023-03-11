@@ -9,7 +9,8 @@ from func_timeout.exceptions import FunctionTimedOut
 
 from data import TESTCASES
 from network.cloud import fetch
-from util.judge import judge_cpp, judge_sympy, run_sh, get_grade, OutputLimitExceeded
+from util.read_config import exec_name, judge
+from util.judge import run_sh, get_grade, OutputLimitExceeded
 
 
 def deal(s: str):
@@ -21,15 +22,6 @@ def deal(s: str):
 
 def main():
     print('===== Program Begin =====')
-    config = json.load(open('config.json', encoding='utf-8'))
-    exec_name = config['main_exec']
-
-    if config['judge'] == 'sympy':
-        judge = judge_sympy
-    elif config['judge'] == 'cpp':
-        judge = judge_cpp
-    else:
-        raise ValueError('Config Error: judge must be sympy or cpp')
 
     print('===== Test Begin =====')
     df = pd.DataFrame(columns=['Testcase Hash', 'Status', 'Lp', 'Lmin', 'Performance', 'Input', 'Output'])

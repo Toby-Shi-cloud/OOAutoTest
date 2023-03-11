@@ -22,9 +22,11 @@ __pycache__
 
 # config
 config.json
-!network/login/config/config.json
 single_testcase.txt
 sso.cache
 
 # .DS_Store
 .DS_Store
+
+# cpp
+cpp
