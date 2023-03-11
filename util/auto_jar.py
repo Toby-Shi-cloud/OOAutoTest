@@ -71,8 +71,6 @@ def auto_jar(zip_path):
                                 main_class = f.read().split('package ')[1].split(';')[0] + '.' + filename[:-5]
                             else:
                                 main_class = filename[:-5]
-                            else:
-                                main_class = filename[:-5]
                     java_files.append(java_file)
 
         if main_class == 'unknown':
