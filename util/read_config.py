@@ -10,17 +10,17 @@ def read_exec(cg):
         if 'jar' in cg.keys():
             cwd = os.path.dirname(cg['jar'])
             jar = os.path.basename(cg['jar'])
-            return [['java', '-jar', jar], cwd, cg['jar']]
+            return [['java', '-jar', jar], cwd, os.path.basename(cg['jar'])]
         elif 'class' in cg.keys():
             cwd = os.path.dirname(cg['class'])
             cls = os.path.basename(cg['class'])
             if len(cls) > 6 and cls[-6:] == '.class':
                 cls = cls[:-6]
-            return [['java', cls], cwd, cg['class']]
+            return [['java', cls], cwd, os.path.basename(cg['class'])]
         elif 'exec' in cg.keys():
             cwd = os.path.dirname(cg['exec'])
             ecc = os.path.abspath(cg['exec'])
-            return [[ecc], cwd, cg['exec']]
+            return [[ecc], cwd, os.path.basename(cg['exec'])]
     raise KeyError('read exec config failed!')
 
 
