@@ -1,0 +1,32 @@
+# IDE
+.fleet
+.vscode
+.idea
+
+# bin
+*.jar
+*.zip
+dist
+score.csv
+judge
+*.exe
+
+# temp
+temp
+jar
+
+# python cache
+*.pyc
+*.pyd
+__pycache__
+
+# config
+config.json
+single_testcase.txt
+sso.cache
+
+# .DS_Store
+.DS_Store
+
+# cpp
+cpp
