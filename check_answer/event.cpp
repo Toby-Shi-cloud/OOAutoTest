@@ -42,69 +42,66 @@ std::ostream &operator<<(std::ostream &_oStr, const Event &event)
     return _oStr;
 }
 
-const Event &BaseEventParser::getCurrentEvent()
-{
-    return curEvent;
-}
-
 void EventParser::InputEventParser::parseNextEvent()
 {
     if (!available) return;
-    std::string str;
-    getline(iStr, str);
-    if (str == "")
+    curLine = "";
+    getline(iStr, curLine);
+    if (curLine == "")
     {
         available = false;
         return;
     }
     if (sscanf(
-        str.c_str(), "[%lf]%d-FROM-%d-TO-%d",
+        curLine.c_str(), "[%lf]%d-FROM-%d-TO-%d",
         &curEvent.time, &curEvent.passengerId,
         &curEvent.curFloor, &curEvent.destFloor
     ) == 4) { curEvent.type = EVENT_REQUEST; return; }
     available = false;
+    throw "未知事件";
 }
 
 void EventParser::OutputEventParser::parseNextEvent()
 {
     if (!available) return;
-    std::string str;
-    getline(iStr, str);
-    if (str == "")
+    curLine = "";
+    getline(iStr, curLine);
+    if (curLine == "")
     {
         available = false;
         return;
     }
     if (sscanf(
-        str.c_str(), "[%lf]ARRIVE-%d-%d",
+        curLine.c_str(), "[%lf]ARRIVE-%d-%d",
         &curEvent.time, &curEvent.curFloor, &curEvent.elevatorId
     ) == 3) { curEvent.type = EVENT_ARRIVE; return; }
     else if (sscanf(
-        str.c_str(), "[%lf]OPEN-%d-%d",
+        curLine.c_str(), "[%lf]OPEN-%d-%d",
         &curEvent.time, &curEvent.curFloor, &curEvent.elevatorId
     ) == 3) { curEvent.type = EVENT_OPEN; return; }
     else if (sscanf(
-        str.c_str(), "[%lf]CLOSE-%d-%d",
+        curLine.c_str(), "[%lf]CLOSE-%d-%d",
         &curEvent.time, &curEvent.curFloor, &curEvent.elevatorId
     ) == 3) { curEvent.type = EVENT_CLOSE; return; }
     else if (sscanf(
-        str.c_str(), "[%lf]IN-%d-%d-%d",
+        curLine.c_str(), "[%lf]IN-%d-%d-%d",
         &curEvent.time, &curEvent.passengerId,
         &curEvent.curFloor, &curEvent.elevatorId
     ) == 4) { curEvent.type = EVENT_IN; return; }
     else if (sscanf(
-        str.c_str(), "[%lf]OUT-%d-%d-%d",
+        curLine.c_str(), "[%lf]OUT-%d-%d-%d",
         &curEvent.time, &curEvent.passengerId,
         &curEvent.curFloor, &curEvent.elevatorId
     ) == 4) { curEvent.type = EVENT_OUT; return; }
     available = false;
+    throw "未知事件";
 }
 
 void EventParser::parseNextEvent()
 {
     if (!available) return;
-    const Event& e1 = inputParser.getCurrentEvent();
-    const Event& e2 = outputParser.getCurrentEvent();
+    const Event&& e1 = inputParser.getCurrentEvent();
+    const Event&& e2 = outputParser.getCurrentEvent();
     if (!inputParser.isAvailable() && !outputParser.isAvailable())
     {
         available = false;
@@ -113,21 +110,25 @@ void EventParser::parseNextEvent()
     else if (!inputParser.isAvailable())
     {
         curEvent = e2;
+        curLine = outputParser.getCurrentLine();
         outputParser.parseNextEvent();
     }
     else if (!outputParser.isAvailable())
     {
         curEvent = e1;
+        curLine = inputParser.getCurrentLine();
         inputParser.parseNextEvent();
     }
     else if (e1.time < e2.time)
     {
         curEvent = e1;
+        curLine = inputParser.getCurrentLine();
         inputParser.parseNextEvent();
     }
     else
     {
         curEvent = e2;
+        curLine = outputParser.getCurrentLine();
         outputParser.parseNextEvent();
     }
 }

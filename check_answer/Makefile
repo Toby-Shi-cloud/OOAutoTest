@@ -1,6 +1,6 @@
 CC = g++
-CFLAGS = -Wall -Werror -std=c++11
-LDFLAGS = 
+CFLAGS = -Wall -Werror -std=c++11 -g
+LDFLAGS = -lstdc++
 
 .PHONY: clean
 
@@ -10,6 +10,10 @@ LDFLAGS =
 utest1: utest1.o event.o
 	$(CC) $(LDFLAGS) -o utest1 utest1.o event.o
 
+utest2: utest2.o event.o checker.o
+	$(CC) $(LDFLAGS) -o utest2 utest2.o event.o checker.o
+
 clean:
 	rm *.o
 	rm utest1
+	rm utest2

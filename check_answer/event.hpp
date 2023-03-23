@@ -24,10 +24,12 @@ class BaseEventParser
 {
 protected:
     Event curEvent = {};
+    std::string curLine;
     bool available = true;
 public:
-    bool isAvailable() { return available; }
-    const Event& getCurrentEvent();
+    bool isAvailable() const { return available; }
+    const Event getCurrentEvent() const { return curEvent; }
+    const std::string getCurrentLine() const { return curLine; }
     virtual void parseNextEvent() = 0;
 };
 
