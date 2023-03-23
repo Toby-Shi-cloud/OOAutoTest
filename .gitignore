@@ -1,18 +1,20 @@
 # IDE
-.fleet
-.vscode
-.idea
+.fleet/**
+.vscode/**
+.idea/**
 
 # bin
+dist/**
 *.jar
 *.zip
-dist
-score.csv
-judge
 *.exe
+*.o
+utest*
+!utest*.cpp
 
 # temp
-temp
+temp/**
+score.csv
 jar
 
 # python cache
@@ -22,11 +24,6 @@ __pycache__
 
 # config
 config.json
-single_testcase.txt
-sso.cache
 
 # .DS_Store
 .DS_Store
-
-# cpp
-cpp

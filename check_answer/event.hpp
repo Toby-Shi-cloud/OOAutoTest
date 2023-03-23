@@ -12,7 +12,7 @@ struct Event
 {
     int type;
     int passengerId;
-    int evelatorId;
+    int elevatorId;
     int curFloor;
     int destFloor;
     double time;

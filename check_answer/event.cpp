@@ -14,25 +14,25 @@ std::ostream &operator<<(std::ostream &_oStr, const Event &event)
         _oStr << event.curFloor << " -> " << event.destFloor;
         break;
     case EVENT_ARRIVE:
-        _oStr << "Arrive: Evelator(" << event.evelatorId << ") ";
+        _oStr << "Arrive: Elevator(" << event.elevatorId << ") ";
         _oStr << event.curFloor;
         break;
     case EVENT_OPEN:
-        _oStr << "Open: Evelator(" << event.evelatorId << ") ";
+        _oStr << "Open: Elevator(" << event.elevatorId << ") ";
         _oStr << "at " << event.curFloor;
         break;
     case EVENT_CLOSE:
-        _oStr << "Close: Evelator(" << event.evelatorId << ") ";
+        _oStr << "Close: Elevator(" << event.elevatorId << ") ";
         _oStr << "at " << event.curFloor;
         break;
     case EVENT_IN:
         _oStr << "In: Passenger(" << event.passengerId << ")" << " -> ";
-        _oStr << "Evelator(" << event.evelatorId << ") ";
+        _oStr << "Elevator(" << event.elevatorId << ") ";
         _oStr << "at " << event.curFloor;
         break;
     case EVENT_OUT:
         _oStr << "Out: Passenger(" << event.passengerId << ")" << " <- ";
-        _oStr << "Evelator(" << event.evelatorId << ") ";
+        _oStr << "Elevator(" << event.elevatorId << ") ";
         _oStr << "at " << event.curFloor;
         break;
     default:
@@ -77,25 +77,25 @@ void EventParser::OutputEventParser::parseNextEvent()
     }
     if (sscanf(
         str.c_str(), "[%lf]ARRIVE-%d-%d",
-        &curEvent.time, &curEvent.curFloor, &curEvent.evelatorId
+        &curEvent.time, &curEvent.curFloor, &curEvent.elevatorId
     ) == 3) { curEvent.type = EVENT_ARRIVE; return; }
     else if (sscanf(
         str.c_str(), "[%lf]OPEN-%d-%d",
-        &curEvent.time, &curEvent.curFloor, &curEvent.evelatorId
+        &curEvent.time, &curEvent.curFloor, &curEvent.elevatorId
     ) == 3) { curEvent.type = EVENT_OPEN; return; }
     else if (sscanf(
         str.c_str(), "[%lf]CLOSE-%d-%d",
-        &curEvent.time, &curEvent.curFloor, &curEvent.evelatorId
+        &curEvent.time, &curEvent.curFloor, &curEvent.elevatorId
     ) == 3) { curEvent.type = EVENT_CLOSE; return; }
     else if (sscanf(
         str.c_str(), "[%lf]IN-%d-%d-%d",
         &curEvent.time, &curEvent.passengerId,
-        &curEvent.curFloor, &curEvent.evelatorId
+        &curEvent.curFloor, &curEvent.elevatorId
     ) == 4) { curEvent.type = EVENT_IN; return; }
     else if (sscanf(
         str.c_str(), "[%lf]OUT-%d-%d-%d",
         &curEvent.time, &curEvent.passengerId,
-        &curEvent.curFloor, &curEvent.evelatorId
+        &curEvent.curFloor, &curEvent.elevatorId
     ) == 4) { curEvent.type = EVENT_OUT; return; }
     available = false;
 }

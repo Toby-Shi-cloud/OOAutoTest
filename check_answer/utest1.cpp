@@ -44,36 +44,36 @@ const string outputString = "\
 
 const string correctString = "\
 [ 4.1000] Request: Passenger(1) 2 -> 9\n\
-[ 5.0700] Arrive: Evelator(1) 2\n\
-[ 5.0710] Open: Evelator(1) at 2\n\
-[ 5.2880] In: Passenger(1) -> Evelator(1) at 2\n\
-[ 5.4860] Close: Evelator(1) at 2\n\
-[ 5.9010] Arrive: Evelator(1) 3\n\
-[ 6.3060] Arrive: Evelator(1) 4\n\
-[ 6.7190] Arrive: Evelator(1) 5\n\
-[ 7.1540] Arrive: Evelator(1) 6\n\
+[ 5.0700] Arrive: Elevator(1) 2\n\
+[ 5.0710] Open: Elevator(1) at 2\n\
+[ 5.2880] In: Passenger(1) -> Elevator(1) at 2\n\
+[ 5.4860] Close: Elevator(1) at 2\n\
+[ 5.9010] Arrive: Elevator(1) 3\n\
+[ 6.3060] Arrive: Elevator(1) 4\n\
+[ 6.7190] Arrive: Elevator(1) 5\n\
+[ 7.1540] Arrive: Elevator(1) 6\n\
 [ 7.5000] Request: Passenger(2) 1 -> 10\n\
-[ 7.5670] Arrive: Evelator(1) 7\n\
-[ 7.9810] Arrive: Evelator(1) 8\n\
-[ 8.0500] Open: Evelator(2) at 1\n\
-[ 8.2580] In: Passenger(2) -> Evelator(2) at 1\n\
-[ 8.3950] Arrive: Evelator(1) 9\n\
-[ 8.4000] Open: Evelator(1) at 9\n\
-[ 8.4010] Out: Passenger(1) <- Evelator(1) at 9\n\
-[ 8.4650] Close: Evelator(2) at 1\n\
-[ 8.8080] Close: Evelator(1) at 9\n\
-[ 8.8860] Arrive: Evelator(2) 2\n\
-[ 9.3020] Arrive: Evelator(2) 3\n\
-[ 9.7120] Arrive: Evelator(2) 4\n\
-[10.1290] Arrive: Evelator(2) 5\n\
-[10.5370] Arrive: Evelator(2) 6\n\
-[10.9490] Arrive: Evelator(2) 7\n\
-[11.3530] Arrive: Evelator(2) 8\n\
-[11.7610] Arrive: Evelator(2) 9\n\
-[12.1690] Arrive: Evelator(2) 10\n\
-[12.1690] Open: Evelator(2) at 10\n\
-[12.1720] Out: Passenger(2) <- Evelator(2) at 10\n\
-[12.5950] Close: Evelator(2) at 10\n\
+[ 7.5670] Arrive: Elevator(1) 7\n\
+[ 7.9810] Arrive: Elevator(1) 8\n\
+[ 8.0500] Open: Elevator(2) at 1\n\
+[ 8.2580] In: Passenger(2) -> Elevator(2) at 1\n\
+[ 8.3950] Arrive: Elevator(1) 9\n\
+[ 8.4000] Open: Elevator(1) at 9\n\
+[ 8.4010] Out: Passenger(1) <- Elevator(1) at 9\n\
+[ 8.4650] Close: Elevator(2) at 1\n\
+[ 8.8080] Close: Elevator(1) at 9\n\
+[ 8.8860] Arrive: Elevator(2) 2\n\
+[ 9.3020] Arrive: Elevator(2) 3\n\
+[ 9.7120] Arrive: Elevator(2) 4\n\
+[10.1290] Arrive: Elevator(2) 5\n\
+[10.5370] Arrive: Elevator(2) 6\n\
+[10.9490] Arrive: Elevator(2) 7\n\
+[11.3530] Arrive: Elevator(2) 8\n\
+[11.7610] Arrive: Elevator(2) 9\n\
+[12.1690] Arrive: Elevator(2) 10\n\
+[12.1690] Open: Elevator(2) at 10\n\
+[12.1720] Out: Passenger(2) <- Elevator(2) at 10\n\
+[12.5950] Close: Elevator(2) at 10\n\
 ";
 
 int main()
