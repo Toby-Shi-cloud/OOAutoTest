@@ -2,6 +2,8 @@
 #include <typeinfo>
 #include <sstream>
 
+static constexpr double eps = 1e-6;
+
 bool Place::operator == (const Place& other) const
 {
     if (typeid(*this) != typeid(other))
@@ -20,7 +22,7 @@ void Elevator::arrive(int _floor, double time)
         throw "移动超过一层";
     if (_floor < lowestFloor || _floor > highestFloor) // in range
         throw "移动到不存在的楼层";
-    if (time < availableTime + moveTime) // available
+    if (time < availableTime + moveTime - eps) // available
         throw "移动时间不足";
     floor = _floor;
     lastAction = ACTION_MOVE;
@@ -33,7 +35,7 @@ void Elevator::open(int _floor, double time)
         throw "电梯不在该楼层";
     if (lastAction == ACTION_OPEN) // only open after close
         throw "电梯已经开门";
-    if (time < availableTime) // available
+    if (time < availableTime - eps) // available
         throw "电梯仍在移动/关门";
     lastAction = ACTION_OPEN;
     availableTime = time + openTime;
@@ -45,7 +47,7 @@ void Elevator::close(int _floor, double time)
         throw "电梯不在该楼层";
     if (lastAction != ACTION_OPEN) // only close after open
         throw "电梯未开门";
-    if (time < availableTime + closeTime) // available
+    if (time < availableTime + closeTime - eps) // available
         throw "关门时间不足";
     lastAction = ACTION_CLOSE;
     availableTime = time;
@@ -99,7 +101,7 @@ Checker::~Checker()
 
 void Checker::checkEvent(const Event& event)
 {
-    if (event.time < time) // time is increasing
+    if (event.time < time - eps) // time is increasing
         throw "时间不是递增的";
     time = event.time;
     auto itE = elevators.find(event.elevatorId);
