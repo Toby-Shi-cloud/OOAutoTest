@@ -2,7 +2,7 @@
 #include <typeinfo>
 #include <sstream>
 
-//Replace checker.cpp This, If PowerShell Doesn't Print Chinese Correctly
+//Replace checker.cpp with This, If PowerShell Doesn't Print Chinese Correctly
 
 static constexpr double eps = 1e-6;
 
