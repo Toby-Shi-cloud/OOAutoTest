@@ -100,8 +100,8 @@ void EventParser::OutputEventParser::parseNextEvent()
 void EventParser::parseNextEvent()
 {
     if (!available) return;
-    const Event&& e1 = inputParser.getCurrentEvent();
-    const Event&& e2 = outputParser.getCurrentEvent();
+    const Event& e1 = inputParser.getCurrentEvent();
+    const Event& e2 = outputParser.getCurrentEvent();
     if (!inputParser.isAvailable() && !outputParser.isAvailable())
     {
         available = false;

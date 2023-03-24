@@ -14,6 +14,4 @@ utest2: utest2.o event.o checker.o
 	$(CC) $(LDFLAGS) -o utest2 utest2.o event.o checker.o
 
 clean:
-	rm *.o
-	rm utest1
-	rm utest2
+	rm *.o utest1 utest2

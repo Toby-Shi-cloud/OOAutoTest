@@ -28,7 +28,7 @@ protected:
     bool available = true;
 public:
     bool isAvailable() const { return available; }
-    const Event getCurrentEvent() const { return curEvent; }
+    const Event& getCurrentEvent() const { return curEvent; }
     const std::string getCurrentLine() const { return curLine; }
     virtual void parseNextEvent() = 0;
 };
