@@ -165,11 +165,12 @@ std::string toString(T x)
 void Checker::checkAnswer(EventParser& parser)
 {
     Checker checker;
-    while (parser.isAvailable())
+    while (true)
     {
         try {
-            checker.checkEvent(parser.getCurrentEvent());
             parser.parseNextEvent();
+            if(!parser.isAvailable()) break;
+            checker.checkEvent(parser.getCurrentEvent());
         } catch (const char *msg) {
             throw parser.getCurrentLine() + " " + FORE_RED + msg + FORE_RESET;
         }

@@ -43,7 +43,7 @@ const string outputString = "\
 ";
 
 const string correctString = "\
-[ 4.1000] Request: Passenger(1) 2 -> 9\n\
+[ 3.6000] Request: Passenger(1) 2 -> 9\n\
 [ 5.0700] Arrive: Elevator(1) 2\n\
 [ 5.0710] Open: Elevator(1) at 2\n\
 [ 5.2880] In: Passenger(1) -> Elevator(1) at 2\n\
@@ -51,8 +51,8 @@ const string correctString = "\
 [ 5.9010] Arrive: Elevator(1) 3\n\
 [ 6.3060] Arrive: Elevator(1) 4\n\
 [ 6.7190] Arrive: Elevator(1) 5\n\
+[ 7.0000] Request: Passenger(2) 1 -> 10\n\
 [ 7.1540] Arrive: Elevator(1) 6\n\
-[ 7.5000] Request: Passenger(2) 1 -> 10\n\
 [ 7.5670] Arrive: Elevator(1) 7\n\
 [ 7.9810] Arrive: Elevator(1) 8\n\
 [ 8.0500] Open: Elevator(2) at 1\n\
@@ -82,12 +82,14 @@ int main()
     istringstream oss(outputString);
     ostringstream sout;
     EventParser ep(iss, oss);
+    ep.parseNextEvent();
     sout << fixed << setprecision(4);
     while (ep.isAvailable())
     {
         sout << setw(7) << ep.getCurrentEvent() << endl;
         ep.parseNextEvent();
     }
+    // cout << sout.str() << endl;
     assert(sout.str() == correctString);
     cout << "Utest1 pass!" << endl;
     return 0;

@@ -2,12 +2,13 @@
 #define _EVENT_HPP
 #include <iostream>
 
-#define EVENT_REQUEST   0
-#define EVENT_ARRIVE    1
-#define EVENT_OPEN      2
-#define EVENT_CLOSE     3
-#define EVENT_IN        4
-#define EVENT_OUT       5
+#define EVENT_NONE      0
+#define EVENT_REQUEST   1
+#define EVENT_ARRIVE    2
+#define EVENT_OPEN      3
+#define EVENT_CLOSE     4
+#define EVENT_IN        5
+#define EVENT_OUT       6
 struct Event
 {
     int type;
@@ -41,8 +42,7 @@ private:
     private:
         std::istream& iStr;
     public:
-        InputEventParser(std::istream &_iStr): iStr(_iStr)
-            { parseNextEvent(); }
+        InputEventParser(std::istream &_iStr): iStr(_iStr) {}
         void parseNextEvent() override;
     } inputParser;
 
@@ -51,13 +51,12 @@ private:
     private:
         std::istream& iStr;
     public:
-        OutputEventParser(std::istream &_iStr): iStr(_iStr)
-            { parseNextEvent(); }
+        OutputEventParser(std::istream &_iStr): iStr(_iStr) {}
         void parseNextEvent() override;
     } outputParser;
 public:
     EventParser(std::istream &_i1, std::istream &_i2)
-        : inputParser(_i1), outputParser(_i2) { parseNextEvent(); }
+        : inputParser(_i1), outputParser(_i2) {}
     void parseNextEvent() override;
 };
 

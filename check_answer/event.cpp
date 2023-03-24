@@ -56,9 +56,13 @@ void EventParser::InputEventParser::parseNextEvent()
         curLine.c_str(), "[%lf]%d-FROM-%d-TO-%d",
         &curEvent.time, &curEvent.passengerId,
         &curEvent.curFloor, &curEvent.destFloor
-    ) == 4) { curEvent.type = EVENT_REQUEST; return; }
+    ) == 4) {
+        curEvent.type = EVENT_REQUEST;
+        curEvent.time -= 0.5; // 修正可能存在的计时误差
+        return;
+    }
     available = false;
-    throw "未知事件";
+    throw "输入格式错误";
 }
 
 void EventParser::OutputEventParser::parseNextEvent()
@@ -94,12 +98,17 @@ void EventParser::OutputEventParser::parseNextEvent()
         &curEvent.curFloor, &curEvent.elevatorId
     ) == 4) { curEvent.type = EVENT_OUT; return; }
     available = false;
-    throw "未知事件";
+    throw "输出格式错误";
 }
 
 void EventParser::parseNextEvent()
 {
     if (!available) return;
+    if (curEvent.type == EVENT_NONE)
+    {
+        inputParser.parseNextEvent();
+        outputParser.parseNextEvent();
+    }
     const Event& e1 = inputParser.getCurrentEvent();
     const Event& e2 = outputParser.getCurrentEvent();
     if (!inputParser.isAvailable() && !outputParser.isAvailable())

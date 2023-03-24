@@ -4,13 +4,15 @@
 .idea/**
 
 # bin
+main
+!main.*
+utest*
+!utest*.cpp
 dist/**
 *.jar
 *.zip
 *.exe
 *.o
-utest*
-!utest*.cpp
 
 # temp
 temp/**
