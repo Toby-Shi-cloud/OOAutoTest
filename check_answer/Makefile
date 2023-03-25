@@ -1,8 +1,8 @@
 CC = g++
-CFLAGS = -Wall -Werror -std=c++11 -g
+CFLAGS = -Wall -Werror -std=c++11
 LDFLAGS = -lstdc++
 
-.PHONY: clean
+.PHONY: clean event.cpp checker.cpp
 
 main: main.o event.o checker.o
 	$(CC) $(LDFLAGS) -o main main.o event.o checker.o
@@ -16,5 +16,8 @@ utest1: utest1.o event.o
 utest2: utest2.o event.o checker.o
 	$(CC) $(LDFLAGS) -o utest2 utest2.o event.o checker.o
 
-clean:
-	rm *.o utest1 utest2 main
+clean_o:
+	rm -f *.o
+
+clean: clean_o
+	rm -f utest1 utest2 main

@@ -1,4 +1,5 @@
 #include "checker.hpp"
+#include "language.h"
 #include <typeinfo>
 #include <sstream>
 
@@ -19,37 +20,38 @@ bool Place::operator != (const Place& other) const
 void Elevator::arrive(int _floor, double time)
 {
     if (abs(floor - _floor) != 1) // only one floor up or down
-        throw "移动超过一层";
+        throw ARRIVE_TOO_MANY_FLOORS;
     if (_floor < lowestFloor || _floor > highestFloor) // in range
-        throw "移动到不存在的楼层";
+        throw ARRIVE_NO_SUCH_FLOOR;
     if (time < availableTime + moveTime - eps) // available
-        throw "移动时间不足";
+        throw ARRIVE_TOO_HURRY;
+    if (isOpen()) // still open
+        throw ARRIVE_NOT_CLOSED;
     floor = _floor;
-    lastAction = ACTION_MOVE;
     availableTime = time;
 }
 
 void Elevator::open(int _floor, double time)
 {
     if (floor != _floor) // only open at the same floor
-        throw "电梯不在该楼层";
-    if (lastAction == ACTION_OPEN) // only open after close
-        throw "电梯已经开门";
+        throw OPEN_WRONG_FLOOR;
+    if (isOpen()) // only open after close
+        throw OPEN_TWICE;
     if (time < availableTime - eps) // available
-        throw "电梯仍在移动/关门";
-    lastAction = ACTION_OPEN;
+        throw OPEN_TOO_HURRY;
+    closed = false;
     availableTime = time + openTime;
 }
 
 void Elevator::close(int _floor, double time)
 {
     if (floor != _floor) // only close at the same floor
-        throw "电梯不在该楼层";
-    if (lastAction != ACTION_OPEN) // only close after open
-        throw "电梯未开门";
+        throw CLOSE_WRONG_FLOOR;
+    if (closed) // only close after open
+        throw CLOSE_TWICE;
     if (time < availableTime + closeTime - eps) // available
-        throw "关门时间不足";
-    lastAction = ACTION_CLOSE;
+        throw CLOSE_TOO_HURRY;
+    closed = true;
     availableTime = time;
 }
 
@@ -63,11 +65,11 @@ Passenger::~Passenger()
 void Passenger::enter(Elevator* elevator, double time)
 {
     if (typeid(*place) != typeid(Floor)) // only enter at floor
-        throw "乘客已经在电梯中";
+        throw IN_ENTER_TWICE;
     if (place->getFloor() != elevator->getFloor()) // only enter at the same floor
-        throw "乘客和电梯不在同一楼层";
+        throw IN_WRONG_FLOOR;
     if (!elevator->canEnter()) // elevator is available
-        throw "电梯已满或未开门";
+        throw IN_FULL_CLOSED;
     delete place; // delete the floor
     place = elevator;
     elevator->passengerCount++;
@@ -76,11 +78,11 @@ void Passenger::enter(Elevator* elevator, double time)
 void Passenger::exit(Elevator* elevator, double time)
 {
     if (typeid(*place) != typeid(Elevator)) // only exit at elevator
-        throw "乘客不在电梯中";
+        throw OUT_EXIT_TWICE;
     if (place != elevator) // only exit at the same elevator
-        throw "乘客不在指定电梯中";
+        throw OUT_WRONG_ELEV;
     if (!elevator->canExit()) // elevator is available
-        throw "电梯未开门";
+        throw OUT_ELEV_CLOSED;
     place = new Floor(elevator->getFloor());
     elevator->passengerCount--;
 }
@@ -102,7 +104,7 @@ Checker::~Checker()
 void Checker::checkEvent(const Event& event)
 {
     if (event.time < time - eps) // time is increasing
-        throw "时间不是递增的";
+        throw WRONG_TIME_ORDER;
     time = event.time;
     auto itE = elevators.find(event.elevatorId);
     Elevator* elevator = nullptr;
@@ -116,52 +118,41 @@ void Checker::checkEvent(const Event& event)
     {
     case EVENT_ARRIVE:
         if (elevator == nullptr) // elevator is not created
-            throw "电梯不存在";
+            throw NO_ELEVATOR;
         elevator->arrive(event.curFloor, event.time);
         break;
     case EVENT_OPEN:
         if (elevator == nullptr) // elevator is not created
-            throw "电梯不存在";
+            throw NO_ELEVATOR;
         elevator->open(event.curFloor, event.time);
         break;
     case EVENT_CLOSE:
         if (elevator == nullptr) // elevator is not created
-            throw "电梯不存在";
+            throw NO_ELEVATOR;
         elevator->close(event.curFloor, event.time);
         break;
     case EVENT_IN:
         if (passenger == nullptr) // passenger is not created
-            throw "乘客不存在";
+            throw NO_PASSENGER;
         if (elevator == nullptr) // elevator is not created
-            throw "电梯不存在";
+            throw NO_ELEVATOR;
         passenger->enter(elevator, event.time);
         break;
     case EVENT_OUT:
         if (passenger == nullptr) // passenger is not created
-            throw "乘客不存在";
+            throw NO_PASSENGER;
         if (elevator == nullptr) // elevator is not created
-            throw "电梯不存在";
+            throw NO_ELEVATOR;
         passenger->exit(elevator, event.time);
         break;
     case EVENT_REQUEST:
         if (passenger != nullptr) // passenger is not created
-            throw "乘客 ID 重复";
+            throw DUPLICATE_PASSENGER;
         passengers[event.passengerId] = new Passenger(event.passengerId, event.curFloor, event.destFloor);
         break;
     default:
-        throw "未知事件";
+        throw UNKNOWN_ACTION;
     }
-}
-
-#define FORE_RED    "\x1b[31m"
-#define FORE_RESET  "\x1b[39m"
-
-template<typename T>
-std::string toString(T x)
-{
-    std::ostringstream ss;
-    ss << x;
-    return ss.str();
 }
 
 void Checker::checkAnswer(EventParser& parser)
@@ -181,13 +172,13 @@ void Checker::checkAnswer(EventParser& parser)
     {
         auto place = passenger.second->getPlace();
         if (typeid(*place) == typeid(Elevator))
-            throw "电梯系统结束后，" FORE_RED "乘客(" + toString(passenger.second->id) + ")未下电梯" FORE_RESET;
+            throw PASSENGER_TRAPPED(passenger.second->id);
         if (place->getFloor() != passenger.second->to)
-            throw "电梯系统结束后，" FORE_RED "乘客(" + toString(passenger.second->id) + ")未到达目的地" FORE_RESET;
+            throw PASSENGER_WRONG_DIST(passenger.second->id);
     }
     for (auto& elevator : checker.elevators)
     {
         if (elevator.second->isOpen())
-            throw "电梯系统结束后，" FORE_RED "电梯(" + toString(elevator.second->id) + ")未关门" FORE_RESET;
+            throw ELEVATOR_NOT_CLOSED(elevator.second->id);
     }
 }

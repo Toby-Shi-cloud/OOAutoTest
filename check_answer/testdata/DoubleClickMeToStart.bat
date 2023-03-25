@@ -10,6 +10,8 @@ for /l %%i in (1,1,%test%) do (copy %%i.in stdin.txt
  .\datainput_student_win64.exe | java -jar code.jar > %%i.out)
 
 
+echo use mingw32-make.exe -f Makefile_English utest2 to use English output
+
 cd ..
 mingw32-make.exe utest2
 echo compiling utest2
