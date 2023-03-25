@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -Werror -std=c++11
+CFLAGS = -Wall -Werror -std=c++11 -D_LANGUAGE_ENGLISH
 LDFLAGS = -lstdc++
 
 .PHONY: clean event.cpp checker.cpp

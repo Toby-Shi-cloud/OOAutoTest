@@ -27,14 +27,11 @@ class Passenger;
 typedef std::unordered_map<int, Elevator*> ElevatorMap;
 typedef std::unordered_map<int, Passenger*> PassengerMap;
 
-#define ACTION_CLOSE    0
-#define ACTION_OPEN     1
-#define ACTION_MOVE     2
 class Elevator: public Place
 {
 private:
     int floor = 1;
-    int lastAction = ACTION_CLOSE;
+    bool closed = true;
     double availableTime = 0; // time when the elevator is available for next action
 public:
     static const int capacity = 6;
@@ -52,7 +49,7 @@ public:
     void arrive(int _floor, double time); // move to a floor, throw if failed
     void open(int _floor, double time); // open the door, throw if failed
     void close(int _floor, double time); // close the door, throw if failed
-    bool isOpen() const { return lastAction == ACTION_OPEN; }
+    bool isOpen() const { return !closed; }
     bool canEnter() const { return passengerCount < capacity && isOpen(); }
     bool canExit() const { return passengerCount > 0 && isOpen(); }
 };
@@ -88,8 +85,5 @@ public:
     void checkEvent(const Event& event); // check an event, throw if failed
     static void checkAnswer(EventParser& parser); // check the answer, throw if failed
 };
-
-template<typename T>
-std::string toString(T x);
 
 #endif /* _CHECKER_HPP */
