@@ -6,6 +6,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 data::data(int mode, bool jamMode): mode(mode), jamMode(jamMode) {}
 
