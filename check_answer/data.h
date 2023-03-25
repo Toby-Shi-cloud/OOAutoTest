@@ -13,6 +13,8 @@
  * 1: 上行高峰
  * 2: 下行高峰
  * 3: 二路交通
+ * 4: 短途交通
+ * 5: 长途交通
  * jamMode: 拥堵模式（在短时间内进行所有请求）
  */
 class time_generator;
@@ -30,6 +32,8 @@ public:
     void generator_mode1(time_generator& timer);
     void generator_mode2(time_generator& timer);
     void generator_mode3(time_generator& timer);
+    void generator_mode4(time_generator& timer);
+    void generator_mode5(time_generator& timer);
     std::string& getData();
     std::shared_ptr<std::fstream> getData(std::string& file);
 
