@@ -20,4 +20,4 @@ clean_o:
 	rm -f *.o
 
 clean: clean_o
-	rm -f utest1 utest2 main
+	rm -f utest1 utest2 utest3 main
