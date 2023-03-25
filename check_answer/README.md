@@ -25,6 +25,12 @@
 └── utest2.cpp
 ```
 
+## Usage
+
+感谢 yt 写了一个自动测试的 `.bat`.
+另外，如果需要输出英文而不是中文，请将 `.bat` 中的 `mingw32-make.exe utest2`
+更改为 `mingw32-make.exe -f Makefile_English utest2`.
+
 ## Unit Test
 
 ### Utest 1
