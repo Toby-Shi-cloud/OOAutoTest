@@ -6,25 +6,31 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
 
 data::data(int mode, bool jamMode): mode(mode), jamMode(jamMode) {}
 
 data::data() {
     srand((long long)time(nullptr));
-    mode = rand() % 5;
+    mode = rand() % 6;
     jamMode = rand() & 1;
 }
 
-std::string &data::getData() {
+const std::string &data::getData() {
     return this->content;
 }
 
-std::shared_ptr<std::fstream> data::getData(std::string &file) {
-    std::shared_ptr<std::fstream> outfile(new std::fstream);
-    outfile->open(file);
-    *outfile << this->content << std::endl;
-    return outfile;
+std::ostream& data::getData(std::ostream &os) {
+    os << this->content;
+    os.flush();
+    return os;
+}
+
+std::iostream& data::getData(std::iostream &ios) {
+    std::streampos p = ios.tellp(); // save the position of ios
+    ios << this->content;
+    ios.flush();
+    ios.seekg(p); // set the position of ios to the position of ios before writing
+    return ios;
 }
 
 void data::generator() {
@@ -165,10 +171,4 @@ void data::generator_mode5(time_generator &timer) { // 长途交通
         content += "[" + timer.getTime() + "]" + std::to_string(people) + "-FROM-";
         content += std::to_string(begin) + "-TO-" + std::to_string(end) + "\n";
     }
-}
-
-int main(){
-    data a = data();
-    a.generator();
-    std::cout<< a.getData();
 }
