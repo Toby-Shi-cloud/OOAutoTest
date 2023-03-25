@@ -80,7 +80,9 @@ public:
     }
 
     std::string getTime() {
-        return std::to_string(second) + "." + std::to_string(d_second);
+        char output[40];
+        sprintf(output, "%3d.%03d", second, d_second);
+        return output;
     }
 };
 
