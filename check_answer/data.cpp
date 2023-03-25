@@ -165,3 +165,9 @@ void data::generator_mode5(time_generator &timer) { // 长途交通
         content += std::to_string(begin) + "-TO-" + std::to_string(end) + "\n";
     }
 }
+
+int main(){
+    data a = data();
+    a.generator();
+    std::cout<< a.getData();
+}

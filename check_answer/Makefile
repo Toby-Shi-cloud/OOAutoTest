@@ -16,6 +16,9 @@ utest1: utest1.o event.o
 utest2: utest2.o event.o checker.o
 	$(CC) $(LDFLAGS) -o utest2 utest2.o event.o checker.o
 
+data: data.o
+	$(CC) $(LDFLAGS) -o data data.o
+
 clean_o:
 	rm -f *.o
 
