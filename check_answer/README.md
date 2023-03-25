@@ -29,9 +29,11 @@
 
 感谢 yt 写了一个自动测试的 `.bat`.
 另外，如果需要输出英文而不是中文，请将 `.bat` 中的 `mingw32-make.exe utest2`
-更改为 `mingw32-make.exe -f Makefile_English utest2`.
+更改为 `mingw32-make.exe DEFINES=-D_LANGUAGE_ENGLISH utest2`.
 
 ## Unit Test
+
+编译指令: `make <target>`, 使用 `make DEFINES=-D_LANGUAGE_ENGLISH <target>` 可以使用英文输出集.
 
 ### Utest 1
 
@@ -52,6 +54,10 @@ Testcase #4: [ 6.2259]IN-2-10-1 时间不是递增的
 Testcase #5: [  1.6610]IN-1-4-1 乘客不存在
 ```
 即说明 `Checker` 可以正常指出 `testdata` 中的错误。
+
+### Utest 3
+
+执行 `./utest3` 可以在 `testdata/` 中生成 `5` 个输入。
 
 ## Document
 

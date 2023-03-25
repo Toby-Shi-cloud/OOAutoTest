@@ -15,7 +15,7 @@ type %%i.out
 echo --end--
  )
 
-echo use mingw32-make.exe -f Makefile_English utest2 to use English output
+echo use mingw32-make.exe DEFINES=-D_LANGUAGE_ENGLISH utest2 to use English output
 
 cd ..
 mingw32-make.exe utest2
