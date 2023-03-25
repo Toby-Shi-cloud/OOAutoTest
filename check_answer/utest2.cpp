@@ -11,8 +11,8 @@ int main()
     for (int i = 1; i <= dataCount; i++)
     {
         cout << "Testcase #" << i << ": ";
-        ifstream ifs(dic + toString(i) + ".in");
-        ifstream ofs(dic + toString(i) + ".out");
+        ifstream ifs(dic + to_string(i) + ".in");
+        ifstream ofs(dic + to_string(i) + ".out");
         EventParser ep(ifs, ofs);
         try {
             Checker::checkAnswer(ep);

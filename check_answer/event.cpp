@@ -1,4 +1,5 @@
 #include "event.hpp"
+#include "language.h"
 #include <cstring>
 #include <iomanip>
 #include <cstdio>
@@ -62,7 +63,7 @@ void EventParser::InputEventParser::parseNextEvent()
         return;
     }
     available = false;
-    throw "输入格式错误";
+    throw UNKNOWN_FORMAT_INPUT;
 }
 
 void EventParser::OutputEventParser::parseNextEvent()
@@ -98,7 +99,7 @@ void EventParser::OutputEventParser::parseNextEvent()
         &curEvent.curFloor, &curEvent.elevatorId
     ) == 4) { curEvent.type = EVENT_OUT; return; }
     available = false;
-    throw "输出格式错误";
+    throw UNKNOWN_FORMAT_OUTPUT;
 }
 
 void EventParser::parseNextEvent()
