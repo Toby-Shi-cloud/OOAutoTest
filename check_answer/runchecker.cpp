@@ -3,9 +3,6 @@
 #include <fstream>
 using namespace std;
 
-const int dataCount = 5;
-const string dic("testdata/");
-
 int main(int argc, char* argv[])
 {
     int k = atoi(argv[1]);

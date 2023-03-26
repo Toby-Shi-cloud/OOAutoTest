@@ -1,23 +1,38 @@
 CC := g++
-CFLAGS := -Wall -Werror -std=c++11 $(DEFINES)
+CFLAGS := -Wall $(DEFINES) -Wno-deprecated-declarations
+CPPFLAGS := -std=c++11 $(CFLAGS)
+CFLAGS += -std=c11
 LDFLAGS := -lstdc++
+ifeq ($(shell uname), Darwin)
+	LDFLAGS += 
+else
+	LDFLAGS += -static
+endif
 
 .PHONY: clean event.cpp checker.cpp
 
+run: data checker runtest.o
+	$(CC) $(LDFLAGS) -o run runtest.o
+	$(MAKE) clean_o
+	./run
+
+runtest.o: runtest.c
+	gcc $(CFLAGS) -c runtest.c
+
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CPPFLAGS) -c $<
 
-utest1: utest1.o event.o
-	$(CC) $(LDFLAGS) -o utest1 utest1.o event.o
+data: rundata.o data.o
+	$(CC) $(LDFLAGS) -o data data.o rundata.o
 
-utest2: utest2.o event.o checker.o
-	$(CC) $(LDFLAGS) -o utest2 utest2.o event.o checker.o
-
-utest3: utest3.o event.o checker.o data.o
-	$(CC) $(LDFLAGS) -o utest3 utest3.o event.o checker.o data.o
+checker: runchecker.o event.o checker.o
+	$(CC) $(LDFLAGS) -o checker runchecker.o event.o checker.o
 
 clean_o:
 	rm -f *.o
 
 clean: clean_o
-	rm -f utest1 utest2 utest3 main
+	rm -f run data checker 
+	rm -rf ans
+	rm -rf input
+	rm log.txt output.txt stdin.txt
