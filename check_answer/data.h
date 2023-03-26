@@ -22,10 +22,12 @@ private:
     std::string content;
     int mode = 0;
     bool jamMode = false;
+    bool publicTest = false;
     int people = 1;
 public:
     data(); // 默认则会随机选择一种模式生成
     data(int mode, bool jamMode);
+    data(int mode, bool jamMode, bool publicTest): mode(mode), jamMode(jamMode), publicTest(publicTest){}
     void generator();
     void generator_mode0(time_generator& timer);
     void generator_mode1(time_generator& timer);
@@ -44,10 +46,12 @@ private:
     int d_second = 0;
     int min;
     int max;
+    bool publicTest = false;
     std::random_device device;
     std::default_random_engine engine;
     std::uniform_int_distribution<int> distribution;
 public:
+
     explicit time_generator(int mode) {
         switch (mode) {
             case 0:
@@ -66,13 +70,39 @@ public:
                 min = 100;
                 max = 1000;
         }
+        if (!publicTest)
+            second = 1;
         engine = std::default_random_engine (device());
         distribution = std::uniform_int_distribution<int>(min, max);
     }
 
+    time_generator(int mode, bool publicTest) {
+        this->publicTest = publicTest;
+        switch (mode) {
+            case 0:
+                min = 200;
+                max = 1000;
+                break;
+            case 1:
+                min = 100;
+                max = 200;
+                break;
+            case 2:
+                min = 70;
+                max = 110;
+                break;
+            default:
+                min = 100;
+                max = 1000;
+        }
+        if (!publicTest)
+            second = 1;
+        engine = std::default_random_engine (device());
+        distribution = std::uniform_int_distribution<int>(min, max);
+    }
     void step() {
         d_second += distribution(engine);
-        while (d_second > 1000) {
+        while (d_second >= 1000) {
             d_second -= 1000;
             second++;
         }
@@ -80,7 +110,7 @@ public:
 
     std::string getTime() {
         char output[40];
-        sprintf(output, "%3d.%03d", second, d_second);
+        sprintf(output, "%3d.%01d", second, d_second / 100);
         return output;
     }
 };
