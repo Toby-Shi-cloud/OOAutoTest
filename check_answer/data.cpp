@@ -15,15 +15,22 @@ data::data() {
     jamMode = rand() & 1;
 }
 
-std::string &data::getData() {
+const std::string &data::getData() {
     return this->content;
 }
 
-std::shared_ptr<std::fstream> data::getData(std::string &file) {
-    std::shared_ptr<std::fstream> outfile(new std::fstream);
-    outfile->open(file);
-    *outfile << this->content << std::endl;
-    return outfile;
+std::ostream& data::getData(std::ostream &os) {
+    os << this->content;
+    os.flush();
+    return os;
+}
+
+std::iostream& data::getData(std::iostream &ios) {
+    std::streampos p = ios.tellp(); // save the position of ios
+    ios << this->content;
+    ios.flush();
+    ios.seekg(p); // set the position of ios to the position of ios before writing
+    return ios;
 }
 
 void data::generator() {

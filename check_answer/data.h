@@ -5,7 +5,6 @@
 #ifndef DATA_H
 #define DATA_H
 #include <string>
-#include <memory>
 #include <random>
 
 /* mode
@@ -36,9 +35,9 @@ public:
     void generator_mode3(time_generator& timer);
     void generator_mode4(time_generator& timer);
     void generator_mode5(time_generator& timer);
-    std::string& getData();
-    std::shared_ptr<std::fstream> getData(std::string& file);
-
+    const std::string& getData();
+    std::ostream& getData(std::ostream& os); // output data to os and return os
+    std::iostream& getData(std::iostream& ios); // output data to ios and return ios, then you can read from this ios
 };
 
 class time_generator {

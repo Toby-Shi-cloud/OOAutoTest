@@ -73,7 +73,7 @@ public:
 class Checker
 {
 private:
-    double time = 0; // current time
+    double time = -1.0; // current time
     ElevatorMap elevators;
     PassengerMap passengers;
 public:

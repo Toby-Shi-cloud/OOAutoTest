@@ -4,9 +4,20 @@ set test=5
 
 echo You should put datainput_student_win64.exe, %jar%, and 1.in, 2.in, ... here in this folder.
 
+cd ..
+echo ---compiling utest2---
+mingw32-make.exe utest2
+
+echo ---compiling data---
+mingw32-make.exe data
+
+cd .\testdata\
+
 echo ---running tests---
 
-for /l %%i in (1,1,%test%) do (copy %%i.in stdin.txt
+for /l %%i in (1,1,%test%) do (
+..\data.exe 1>%%i.in
+copy %%i.in stdin.txt
 echo --%%i.in--
 type %%i.in
  .\datainput_student_win64.exe | java -jar %jar% > %%i.out
@@ -15,13 +26,9 @@ type %%i.out
 echo --end--
  )
 
-echo use mingw32-make.exe -f Makefile_English utest2 to use English output
-
-cd ..
-mingw32-make.exe utest2
-echo compiling utest2
+echo use mingw32-make.exe DEFINES=-D_LANGUAGE_ENGLISH utest2 to use English output
 
 echo ---Here is Your Result---
-.\utest2.exe
+..\utest2.exe
 
 pause
