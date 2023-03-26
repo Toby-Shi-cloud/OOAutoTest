@@ -12,6 +12,8 @@ code2.jar
 code2.jar
 ```
 
+将课程组提供的数据输入器重命名为 `datainput.exe` 并置于本目录下。
+
 然后编译运行 `testall.c` 即可。
 
 ## MAKEFILE指南
