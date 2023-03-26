@@ -1,12 +1,20 @@
-# Checker
+# OOAutoChecker
 
 ## 多线程评测使用说明
 
-将待评测的 `jar` 包放置于本目录下，每行一个将文件名填入 `test_jar` 中。
+将待评测的 `jar` 包放置于本目录下，每行一个将 `jar` 包名填入 `test_jar` 中。
+
+示例：
+
+```txt
+code1.jar
+code2.jar
+code2.jar
+```
 
 然后编译运行 `testall.c` 即可。
 
-## MAKEFILE
+## MAKEFILE指南
 
 需要将课程组提供的数据输入文件重命名为 `datainput.exe`，将待评测的 **jar** 包重命名为 `code.jar`，一同放在本目录下。
 
