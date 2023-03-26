@@ -11,7 +11,7 @@ data::data(int mode, bool jamMode): mode(mode), jamMode(jamMode) {}
 
 data::data() {
     srand((long long)time(nullptr));
-    mode = rand() % 5;
+    mode = rand() % 6;
     jamMode = rand() & 1;
 }
 
