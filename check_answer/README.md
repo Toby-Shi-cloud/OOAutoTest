@@ -35,29 +35,17 @@
 
 编译指令: `make <target>`, 使用 `make DEFINES=-D_LANGUAGE_ENGLISH <target>` 可以使用英文输出集.
 
-### Utest 1
+### MAKEFILE
 
-`utest1.cpp` 用于测试 `EventParser`。编译指令: `make utest1`。
+需要将课程组提供的数据输入文件重命名为 `datainput.exe`，将待评测的 **jar** 包重命名为 `code.jar`，一同放在本目录下。
 
-执行 `./utest1` 的结果: `Utest1 pass!`。
+执行 `make` 命令（`windows` 系统下为 `mingw32-make.exe`）以进行评测一条龙服务。
 
-### Utest 2
+产生的数据将保存在 `.\input` 内，对应的输出将保存在 `.\ans` 内。
 
-`utest2.cpp` 用于测试 `Checker`。编译指令: `make utest2`。
+执行 `make clean` 命令（`windows` 系统下为 `mingw32-make.exe clean`）清除评测产生的文件（包括输入输出数据与文档）。
 
-执行 `./utest2` 的结果:
-```
-Testcase #1: Accepted
-Testcase #2: [ 4.6280]OUT-1-1-1 乘客不在电梯中
-Testcase #3: 电梯系统结束后，电梯(2)未关门
-Testcase #4: [ 6.2259]IN-2-10-1 时间不是递增的
-Testcase #5: [  1.6610]IN-1-4-1 乘客不存在
-```
-即说明 `Checker` 可以正常指出 `testdata` 中的错误。
-
-### Utest 3
-
-执行 `./utest3` 可以在 `testdata/` 中生成 `5` 个输入。
+评测机内部结构见 `README_test.md`。
 
 ## Document
 
