@@ -1,41 +1,6 @@
 # Checker
 
-## Structure
-
-```
-.
-├── Makefile
-├── README.md
-├── checker.cpp
-├── checker.hpp
-├── event.cpp
-├── event.hpp
-├── testdata
-│   ├── 1.in
-│   ├── 1.out
-│   ├── 2.in
-│   ├── 2.out
-│   ├── 3.in
-│   ├── 3.out
-│   ├── 4.in
-│   ├── 4.out
-│   ├── 5.in
-│   └── 5.out
-├── utest1.cpp
-└── utest2.cpp
-```
-
-## Usage
-
-感谢 yt 写了一个自动测试的 `.bat`.
-另外，如果需要输出英文而不是中文，请将 `.bat` 中的 `mingw32-make.exe utest2`
-更改为 `mingw32-make.exe DEFINES=-D_LANGUAGE_ENGLISH utest2`.
-
-## Unit Test
-
-编译指令: `make <target>`, 使用 `make DEFINES=-D_LANGUAGE_ENGLISH <target>` 可以使用英文输出集.
-
-### MAKEFILE
+## MAKEFILE
 
 需要将课程组提供的数据输入文件重命名为 `datainput.exe`，将待评测的 **jar** 包重命名为 `code.jar`，一同放在本目录下。
 
