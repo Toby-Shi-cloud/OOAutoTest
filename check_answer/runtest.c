@@ -57,9 +57,9 @@ int main() {
         }
         Sleep(300);
 #ifdef _WIN32
-        printf("Data%d generate complete, you can check it in data\\data%d\n", i, i);
+        printf("Data%d generate complete, you can check it in input\\data%d\n", i, i);
 #else
-        printf("Data%d generate complete, you can check it in data/data%d\n", i, i);
+        printf("Data%d generate complete, you can check it in input/data%d\n", i, i);
 #endif
         Sleep(300);
         printf("Running your program...\n");
@@ -89,7 +89,7 @@ int main() {
         printf("Complete running, you can check your ans in ans/ans%d.txt\n", i);
 #endif
         Sleep(300);
-        printf("Testing your anser:\n");
+        printf("Testing your answer:\n");
         Sleep(300);
         sprintf(command, "%s %d", checker, i);
         system(command);
