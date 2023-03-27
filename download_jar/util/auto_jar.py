@@ -13,22 +13,35 @@ def unzip(zip_file, dest_dir):
     # os.remove(zip_file)
 
 
-def compile_java(src_path, class_path, java_files):
+def compile_java(class_path, java_files, lib_path):
     """Compile java files in src_path and output to class_path.
     """
-    cmd = 'javac -encoding UTF-8 -d %s -cp %s %s' % (
-        class_path, src_path, ' '.join(java_files))
+    cmd = 'javac -encoding UTF-8 -d ' + class_path
+    if lib_path:
+        cmd += ' -cp '
+        for jar in os.listdir(lib_path):
+            if jar.endswith('.jar'):
+                cmd += os.path.join(lib_path, jar) + ';'
+    for java_file in java_files:
+        cmd += ' ' + java_file
     os.system(cmd)
 
 
-def create_MANIFEST(class_path, main_class):
+def create_MANIFEST(class_path, main_class, lib_path):
     """Create a MANIFEST file.
     """
     manifest = os.path.join(class_path, 'MY_MANIFEST.MF')
     with open(manifest, 'w') as f:
         f.write('Manifest-Version: 1.0\n')
+        if lib_path:
+            f.write('Class-Path:')
+            for jar in os.listdir(lib_path):
+                if jar.endswith('.jar'):
+                    f.write(' lib/' + jar)
+            f.write('\n')
         f.write('Created-By: Red\n')
-        f.write('Main-Class: %s\n\n' % main_class)
+        f.write('Main-Class: %s\n' % main_class)
+        f.write('\n')
     return manifest
 
 
@@ -39,7 +52,7 @@ def make_jar(src_path, jar_file, manifest='MY_MANIFEST.MF'):
     os.system(cmd)
 
 
-def auto_jar(zip_path):
+def auto_jar(zip_path, lib_path=None):
 
     if not os.path.exists('temp'):
         os.mkdir('temp')
@@ -68,7 +81,8 @@ def auto_jar(zip_path):
                             f.buffer.seek(0)
                             if 'package' in f.read():
                                 f.buffer.seek(0)
-                                main_class = f.read().split('package ')[1].split(';')[0] + '.' + filename[:-5]
+                                main_class = f.read().split('package ')[1].split(';')[
+                                    0] + '.' + filename[:-5]
                             else:
                                 main_class = filename[:-5]
                     java_files.append(java_file)
@@ -77,12 +91,16 @@ def auto_jar(zip_path):
             print('No main class found in %s' % zip_file)
             continue
 
-        compile_java(src_path, class_path, java_files)
-        manifest = create_MANIFEST(class_path, main_class)
+        compile_java(class_path, java_files, lib_path)
+        manifest = create_MANIFEST(class_path, main_class, lib_path)
         make_jar(class_path, os.path.join(
             'jar', zip_file[:-4] + '.jar'), manifest)
 
     shutil.rmtree('temp')
+    if lib_path:
+        if os.path.exists('jar/lib'):
+            shutil.rmtree('jar/lib')
+        shutil.copytree(lib_path, 'jar/lib')
 
 
 if __name__ == '__main__':
