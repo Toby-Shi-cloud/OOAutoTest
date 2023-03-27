@@ -12,7 +12,7 @@
 #define _mkdir(f) mkdir(f, 0755)
 #endif
 
-int main() {
+int main(int argc, char* argv[]) {
     int num = 1;
 #ifdef _WIN32
     char folder[10] = ".\\ans";
@@ -28,12 +28,18 @@ int main() {
     fprintf(file, "Test begin:\n");
     fclose(file);
 
-    printf("Please enter the number of testcases: ");
-    scanf("%d", &num);
+    if (argc == 1) {
+        printf("Please enter the number of testcases: ");
+        scanf("%d", &num);
+    }
+    else {
+        num = atoi(argv[1]);
+    }
+
     for (int i = 1; i <= num; i++) {
         printf("In testcase %d:\n", i);
         char data[16] = "data";
-        char jar_name[32] = "code.jar";
+        char jar_name[32] = ".\\code.jar";
 #ifdef _WIN32
         char input[32] = ".\\datainput.exe";
         char checker[32] = ".\\checker";

@@ -1,6 +1,22 @@
-# Checker
+# OOAutoChecker
 
-## MAKEFILE
+## 多线程评测使用说明
+
+将待评测的 `jar` 包放置于本目录下，每行一个将 `jar` 包名填入 `test_jar` 中。
+
+示例：
+
+```txt
+code1.jar
+code2.jar
+code2.jar
+```
+
+将课程组提供的数据输入器重命名为 `datainput.exe` 并置于本目录下。
+
+然后编译运行 `testall.c` 即可。
+
+## MAKEFILE指南
 
 需要将课程组提供的数据输入文件重命名为 `datainput.exe`，将待评测的 **jar** 包重命名为 `code.jar`，一同放在本目录下。
 
@@ -19,11 +35,13 @@
 使用时应先 `#include "event.hpp"`。
 
 - `EventParser::EventParser(std::istream &_i1, std::istream &_i2)`
+
 > 类 `EventParser` 构造方法要求传入两个 `std::istream&`，即两个输入流，第一个输入流是输入数据，第二个是输出数据。注意这两个输入流不能相同或有冲突。
 >
 > 由于 `std::ifstream` 和 `std::istringstream` 均从 `std::istream` 派生，所以当需要以文件作为输入时用 `std::ifstream`，需要直接使用字符串时用 `std::istringstream` (当然 `std::fstream` 和 `std::stringstream` 也是可用的)。
 
 - `void EventParser::parseNextEvent() throw(const char*)`
+
 > 成员方法 `parseNextEvent` 会进行一次读入，并将下一个事件设置为 `curEvent`，`curEvent` 可以通过 `getCurrentEvent()` 方法获得 (该方法返回一个不可变引用)。
 > 
 > 当输入流全部为空时，将 `available` 置 `0`。当输入流数据格式异常时，抛出 `const char*`。
