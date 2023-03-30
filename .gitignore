@@ -1,14 +1,14 @@
+# bin
+* 
+!*.*
+!*/
+
 # IDE
 .fleet/**
 .vscode/**
 .idea/**
 
 # bin
-main
-!main.*
-datainput*
-utest*
-!utest*.cpp
 dist/**
 *.jar
 *.zip
