@@ -1,8 +1,20 @@
+# encoding=utf-8
+
 import os
 import json
 import requests
 
 from network.login import oo_login
+name_map = {
+    1: '1_Dubhe',
+    2: '2_Merak',
+    3: '3_Phecda',
+    4: '4_Megrez',
+    5: '5_Alioth',
+    6: '6_Mizar',
+    7: '7_Alkaid',
+    8: '8_Alcor',
+}
 
 
 def get_info(oo_cookies):
@@ -23,7 +35,7 @@ def download_zip() -> None:
     if not os.path.exists(os.path.join('temp', 'zip')):
         os.mkdir(os.path.join('temp', 'zip'))
     for member in info['data']['members']:
-        name = member['alias_name_string']
+        name = name_map[member['alias_name']]
         url = member['download_url']
         r = requests.get(url, cookies=oo_cookies)
         open(os.path.join('temp', 'zip', name + '.zip'), 'wb').write(r.content)

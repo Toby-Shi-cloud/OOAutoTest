@@ -110,7 +110,7 @@ public:
 
     std::string getTime() {
         char output[40];
-        sprintf(output, "%d.%01d", second, d_second / 100);
+        sprintf(output, "%.1f", second + d_second * 1e-3);
         return output;
     }
 };
