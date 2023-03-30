@@ -16,8 +16,14 @@ def unzip(zip_file, dest_dir):
 def compile_java(class_path, java_files, lib_path):
     """Compile java files in src_path and output to class_path.
     """
-    cmd = 'javac --class-path elevator-1.jar -encoding UTF-8 -d %s -cp %s %s' % (
-        class_path, src_path, ' '.join(java_files))
+    cmd = 'javac -encoding UTF-8 -d ' + class_path
+    if lib_path:
+        cmd += ' -cp '
+        for jar in os.listdir(lib_path):
+            if jar.endswith('.jar'):
+                cmd += os.path.join(lib_path, jar) + ';'
+    for java_file in java_files:
+        cmd += ' ' + java_file
     os.system(cmd)
 
 

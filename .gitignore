@@ -20,7 +20,6 @@ dist/**
 temp/**
 score.csv
 jar
-zip
 
 # python cache
 *.pyc
