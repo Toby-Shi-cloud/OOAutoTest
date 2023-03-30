@@ -3,27 +3,38 @@
 #include <fstream>
 using namespace std;
 
-int main(int argc, char* argv[])
+void usage(const char *name)
 {
-    int k = atoi(argv[1]);
-    FILE* file = fopen("log.txt", "a+");
-    fprintf(file, "#Testcase %d:\n", k);
-    ifstream ifs("stdin.txt");
-    ifstream ofs("output.txt");
-    EventParser ep(ifs, ofs);
-    try {
-        Checker::checkAnswer(ep);
-        cout << "Accepted" << endl;
-        fprintf(file, "Accepted\n");
-    } catch (string& msg) {
-        cout << msg << endl;
-        fprintf(file, "%s\n", msg.c_str());
-        fclose(file);
+    cout << "Usage: " << name << " [input_file] [output_file]" << endl;
+    exit(127);
+}
+
+const char *fin = "stdin.txt";
+const char *fout = "stdout.txt";
+
+int main(int argc, char *argv[])
+{
+    if (argc == 3) {
+        fin = argv[1];
+        fout = argv[2];
+    } else if (argc != 1) {
+        usage(argv[0]);
         return 1;
     }
-    fclose(file);
+    ifstream ifs(fin);
+    ifstream ofs(fout);
+    EventParser ep(ifs, ofs);
+    try
+    {
+        Checker::checkAnswer(ep);
+        cout << "Accepted" << endl;
+    }
+    catch (string &msg)
+    {
+        cout << msg << endl;
+        exit(1);
+    }
     ifs.close();
     ofs.close();
-
     return 0;
 }
