@@ -14,6 +14,14 @@ std::ostream &operator<<(std::ostream &_oStr, const Event &event)
         _oStr << "Request: Passenger(" << event.passengerId << ") ";
         _oStr << event.curFloor << " -> " << event.destFloor;
         break;
+    case EVENT_NEW_ELEV:
+        _oStr << "New Elevator: Elevator(" << event.elevatorId << ") ";
+        _oStr << "at " << event.curFloor << " with capacity = ";
+        _oStr << event.capacity << " and speed = " << event.speed;
+        break;
+    case EVENT_MAINTAIN:
+        _oStr << "Maintain: Elevator(" << event.elevatorId << ")";
+        break;
     case EVENT_ARRIVE:
         _oStr << "Arrive: Elevator(" << event.elevatorId << ") ";
         _oStr << event.curFloor;
@@ -36,6 +44,12 @@ std::ostream &operator<<(std::ostream &_oStr, const Event &event)
         _oStr << "Elevator(" << event.elevatorId << ") ";
         _oStr << "at " << event.curFloor;
         break;
+    case EVENT_MT_AC:
+        _oStr << "Maintain Accept: Elevator(" << event.elevatorId << ")";
+        break;
+    case EVENT_MT_ABLE:
+        _oStr << "Maintain Able: Elevator(" << event.elevatorId << ")";
+        break;
     default:
         _oStr << "Unknown event!";
         break;
@@ -57,11 +71,16 @@ void EventParser::InputEventParser::parseNextEvent()
         curLine.c_str(), "[%lf]%d-FROM-%d-TO-%d",
         &curEvent.time, &curEvent.passengerId,
         &curEvent.curFloor, &curEvent.destFloor
-    ) == 4) {
-        curEvent.type = EVENT_REQUEST;
-        curEvent.time -= 0.5; // 修正可能存在的计时误差
-        return;
-    }
+    ) == 4) { curEvent.type = EVENT_REQUEST; return; }
+    else if (sscanf(
+        curLine.c_str(), "[%lf]ADD-Elevator-%d-%d-%d-%lf",
+        &curEvent.time, &curEvent.elevatorId,
+        &curEvent.curFloor, &curEvent.capacity, &curEvent.speed
+    ) == 5) { curEvent.type = EVENT_NEW_ELEV; return; }
+    else if (sscanf(
+        curLine.c_str(), "[%lf]MAINTAIN-Elevator-%d",
+        &curEvent.time, &curEvent.elevatorId
+    ) == 2) { curEvent.type = EVENT_MAINTAIN; return; }
     available = false;
     throw UNKNOWN_FORMAT_INPUT;
 }
@@ -98,6 +117,14 @@ void EventParser::OutputEventParser::parseNextEvent()
         &curEvent.time, &curEvent.passengerId,
         &curEvent.curFloor, &curEvent.elevatorId
     ) == 4) { curEvent.type = EVENT_OUT; return; }
+    else if (sscanf(
+        curLine.c_str(), "[%lf]MAINTAIN_ACCEPT-%d",
+        &curEvent.time, &curEvent.elevatorId
+    ) == 2) { curEvent.type = EVENT_MT_AC; return; }
+    else if (sscanf(
+        curLine.c_str(), "[%lf]MAINTAIN_ABLE-%d",
+        &curEvent.time, &curEvent.elevatorId
+    ) == 2) { curEvent.type = EVENT_MT_ABLE; return; }
     available = false;
     throw UNKNOWN_FORMAT_OUTPUT;
 }
@@ -110,7 +137,8 @@ void EventParser::parseNextEvent()
         inputParser.parseNextEvent();
         outputParser.parseNextEvent();
     }
-    const Event& e1 = inputParser.getCurrentEvent();
+    Event e1 = inputParser.getCurrentEvent();
+    e1.time -= 0.5; // 避免出现计时误差
     const Event& e2 = outputParser.getCurrentEvent();
     if (!inputParser.isAvailable() && !outputParser.isAvailable())
     {
@@ -125,13 +153,13 @@ void EventParser::parseNextEvent()
     }
     else if (!outputParser.isAvailable())
     {
-        curEvent = e1;
+        curEvent = std::move(e1);
         curLine = inputParser.getCurrentLine();
         inputParser.parseNextEvent();
     }
     else if (e1.time < e2.time)
     {
-        curEvent = e1;
+        curEvent = std::move(e1);
         curLine = inputParser.getCurrentLine();
         inputParser.parseNextEvent();
     }

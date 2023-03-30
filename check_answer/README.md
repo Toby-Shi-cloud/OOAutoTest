@@ -1,63 +1,32 @@
-# Checker
+# OOAutoChecker
 
-## Structure
+## 多线程评测使用说明
 
-```
-.
-├── Makefile
-├── README.md
-├── checker.cpp
-├── checker.hpp
-├── event.cpp
-├── event.hpp
-├── testdata
-│   ├── 1.in
-│   ├── 1.out
-│   ├── 2.in
-│   ├── 2.out
-│   ├── 3.in
-│   ├── 3.out
-│   ├── 4.in
-│   ├── 4.out
-│   ├── 5.in
-│   └── 5.out
-├── utest1.cpp
-└── utest2.cpp
+将待评测的 `jar` 包放置于本目录下，每行一个将 `jar` 包名填入 `test_jar` 中。
+
+示例：
+
+```txt
+code1.jar
+code2.jar
+code2.jar
 ```
 
-## Usage
+将课程组提供的数据输入器重命名为 `datainput.exe` 并置于本目录下。
 
-感谢 yt 写了一个自动测试的 `.bat`.
-另外，如果需要输出英文而不是中文，请将 `.bat` 中的 `mingw32-make.exe utest2`
-更改为 `mingw32-make.exe DEFINES=-D_LANGUAGE_ENGLISH utest2`.
+然后编译运行 `testall.c` 即可。
 
-## Unit Test
+## MAKEFILE指南
 
-编译指令: `make <target>`, 使用 `make DEFINES=-D_LANGUAGE_ENGLISH <target>` 可以使用英文输出集.
+需要将课程组提供的数据输入文件重命名为 `datainput.exe`，将待评测的 **jar** 包重命名为 `code.jar`，一同放在本目录下。
 
-### Utest 1
+执行 `make` 命令（`windows` 系统下为 `mingw32-make.exe`）以进行评测一条龙服务。
 
-`utest1.cpp` 用于测试 `EventParser`。编译指令: `make utest1`。
+产生的数据将保存在 `.\input` 内，对应的输出将保存在 `.\ans` 内。
 
-执行 `./utest1` 的结果: `Utest1 pass!`。
+执行 `make clean` 命令（`windows` 系统下为 `mingw32-make.exe clean`）清除评测产生的文件（包括输入输出数据与文档）。
 
-### Utest 2
-
-`utest2.cpp` 用于测试 `Checker`。编译指令: `make utest2`。
-
-执行 `./utest2` 的结果:
-```
-Testcase #1: Accepted
-Testcase #2: [ 4.6280]OUT-1-1-1 乘客不在电梯中
-Testcase #3: 电梯系统结束后，电梯(2)未关门
-Testcase #4: [ 6.2259]IN-2-10-1 时间不是递增的
-Testcase #5: [  1.6610]IN-1-4-1 乘客不存在
-```
-即说明 `Checker` 可以正常指出 `testdata` 中的错误。
-
-### Utest 3
-
-执行 `./utest3` 可以在 `testdata/` 中生成 `5` 个输入。
+评测机内部结构见 `README_test.md`。
 
 ## Document
 
@@ -66,11 +35,13 @@ Testcase #5: [  1.6610]IN-1-4-1 乘客不存在
 使用时应先 `#include "event.hpp"`。
 
 - `EventParser::EventParser(std::istream &_i1, std::istream &_i2)`
+
 > 类 `EventParser` 构造方法要求传入两个 `std::istream&`，即两个输入流，第一个输入流是输入数据，第二个是输出数据。注意这两个输入流不能相同或有冲突。
 >
 > 由于 `std::ifstream` 和 `std::istringstream` 均从 `std::istream` 派生，所以当需要以文件作为输入时用 `std::ifstream`，需要直接使用字符串时用 `std::istringstream` (当然 `std::fstream` 和 `std::stringstream` 也是可用的)。
 
 - `void EventParser::parseNextEvent() throw(const char*)`
+
 > 成员方法 `parseNextEvent` 会进行一次读入，并将下一个事件设置为 `curEvent`，`curEvent` 可以通过 `getCurrentEvent()` 方法获得 (该方法返回一个不可变引用)。
 > 
 > 当输入流全部为空时，将 `available` 置 `0`。当输入流数据格式异常时，抛出 `const char*`。
