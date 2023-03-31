@@ -138,7 +138,7 @@ void EventParser::parseNextEvent()
         outputParser.parseNextEvent();
     }
     Event e1 = inputParser.getCurrentEvent();
-    e1.time -= 0.5; // 避免出现计时误差
+    e1.time -= EVENT_FIX_TIME; // 避免出现计时误差
     const Event& e2 = outputParser.getCurrentEvent();
     if (!inputParser.isAvailable() && !outputParser.isAvailable())
     {
