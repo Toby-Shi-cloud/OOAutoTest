@@ -69,7 +69,7 @@ void Data::generate() {
 
 void Data::generator_mode0() {
     srand(time(nullptr));
-    int id = 1;
+    int id = 100;
     int request_num = this->amount;
     int num_elevator = 6;
     int elevator_min = rand() % 6 + 1;
@@ -88,11 +88,13 @@ void Data::generator_mode0() {
         if (num_elevator < elevator_max) {
             if (rand() % 100 < 10) {
                 generateElevator();
+                num_elevator++;
             }
         }
         if (num_elevator > elevator_min) {
             if (rand() % 100 < 10) {
                 generateMaintain();
+                num_elevator--;
             }
         }
         id++;
@@ -101,7 +103,7 @@ void Data::generator_mode0() {
 
 void Data::generator_mode1() {
     srand(time(nullptr));
-    int id = 1;
+    int id = 100;
     int request_num = this->amount;
     int num_elevator = 6;
     int elevator_min = rand() % 6 + 1;
@@ -117,11 +119,13 @@ void Data::generator_mode1() {
         if (num_elevator < elevator_max) {
             if (rand() % 100 < 10) {
                 generateElevator();
+                num_elevator++;
             }
         }
         if (num_elevator > elevator_min) {
             if (rand() % 100 < 10) {
                 generateMaintain();
+                num_elevator--;
             }
         }
         id++;
@@ -130,7 +134,7 @@ void Data::generator_mode1() {
 
 void Data::generator_mode2() {
     srand(time(nullptr));
-    int id = 1;
+    int id = 100;
     int request_num = this->amount;
     int num_elevator = 6;
     int elevator_min = rand() % 6 + 1;
@@ -145,9 +149,11 @@ void Data::generator_mode2() {
         }
         if (num_elevator < elevator_max && rand() % 100 < 10) {
             generateElevator();
+            num_elevator++;
         }
         if (num_elevator > elevator_min && rand() % 100 < 10) {
             generateMaintain();
+            num_elevator--;
         }
         id++;
     }
@@ -155,7 +161,7 @@ void Data::generator_mode2() {
 
 void Data::generator_mode3() {
     srand(time(nullptr));
-    int id = 1;
+    int id = 100;
     int request_num = this->amount;
     int num_elevator = 6;
     int elevator_min = rand() % 6 + 1;
@@ -177,9 +183,11 @@ void Data::generator_mode3() {
         }
         if (num_elevator < elevator_max && rand() % 100 < 10) {
             generateElevator();
+            num_elevator++;
         }
         if (num_elevator > elevator_min && rand() % 100 < 10) {
             generateMaintain();
+            num_elevator--;
         }
         id++;
     }
@@ -187,7 +195,7 @@ void Data::generator_mode3() {
 
 void Data::generator_mode4() {
     srand(time(nullptr));
-    int id = 1;
+    int id = 100;
     int request_num = this->amount;
     int num_elevator = 6;
     int elevator_min = rand() % 6 + 1;
@@ -210,9 +218,11 @@ void Data::generator_mode4() {
         }
         if (num_elevator < elevator_max && rand() % 100 < 10) {
             generateElevator();
+            num_elevator++;
         }
         if (num_elevator > elevator_min && rand() % 100 < 10) {
             generateMaintain();
+            num_elevator--;
         }
         id++;
     }
@@ -220,7 +230,7 @@ void Data::generator_mode4() {
 
 void Data::generator_mode5() {
     srand(time(nullptr));
-    int id = 1;
+    int id = 100;
     int request_num = this->amount;
     int num_elevator = 6;
     int elevator_min = rand() % 6 + 1;
@@ -239,9 +249,11 @@ void Data::generator_mode5() {
         }
         if (num_elevator < elevator_max && rand() % 100 < 10) {
             generateElevator();
+            num_elevator++;
         }
         if (num_elevator > elevator_min && rand() % 100 < 10) {
             generateMaintain();
+            num_elevator--;
         }
         id++;
     }
