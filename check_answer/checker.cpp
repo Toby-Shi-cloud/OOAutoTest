@@ -222,5 +222,7 @@ void Checker::checkAnswer(EventParser& parser)
     {
         if (elevator.second->isOpen())
             throw ELEVATOR_NOT_CLOSED(elevator.second->id);
+        if (elevator.second->maintainState != 0)
+            throw ELEVATOR_NOT_MAINTAINED(elevator.second->id);
     }
 }
