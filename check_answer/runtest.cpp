@@ -15,6 +15,7 @@
 
 void rundata(const char* dataname);
 int if_rundata();
+int if_quiet();
 void read_config(const char* key, char* value);
 void __mkdir(char* filename);
 void remove_space(char* src);
@@ -29,6 +30,7 @@ int main(int argc, char* argv[]) {
     char out_file[16] = {0};
     int test_amount;
     int flag_rundata = if_rundata();
+    int flag_quiet = if_quiet();
     FILE* log = fopen("log.txt", "w+");
     if (log == NULL) {
         printf("Fail to open log.txt\n");
@@ -90,7 +92,7 @@ int main(int argc, char* argv[]) {
         } else {
             sprintf(out_file, "output.txt");
         }
-        sprintf(command, "start runjar.exe %s %s %s", jar_name, input, out_file);
+        sprintf(command, "start %s runjar.exe %s %s %s", (flag_quiet == 1 ? "/b" : ""), jar_name, input, out_file);
     #else
         if (flag_rundata) {
             sprintf(out_file, "./ans/%d.out", i);
@@ -114,6 +116,12 @@ int if_rundata() { // 1: run_data 0: no run_data
     char configbuf[50];
     read_config("readInput", configbuf);
     return !atoi(configbuf);
+}
+
+int if_quiet() {
+    char flag[20];
+    read_config("quiet", flag);
+    return atoi(flag);
 }
 
 void rundata(const char* dataname) {
