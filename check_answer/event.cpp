@@ -134,8 +134,10 @@ void EventParser::parseNextEvent()
     if (!available) return;
     if (curEvent.type == EVENT_NONE)
     {
-        inputParser.parseNextEvent();
-        outputParser.parseNextEvent();
+        try { inputParser.parseNextEvent(); }
+        catch (const char *msg) { curLine = inputParser.getCurrentLine(); throw msg; }
+        try { outputParser.parseNextEvent(); }
+        catch (const char *msg) { curLine = outputParser.getCurrentLine(); throw msg; }
     }
     Event e1 = inputParser.getCurrentEvent();
     e1.time -= EVENT_FIX_TIME; // 避免出现计时误差
@@ -149,24 +151,28 @@ void EventParser::parseNextEvent()
     {
         curEvent = e2;
         curLine = outputParser.getCurrentLine();
-        outputParser.parseNextEvent();
+        try { outputParser.parseNextEvent(); }
+        catch (const char *msg) { curLine = outputParser.getCurrentLine(); throw msg; }
     }
     else if (!outputParser.isAvailable())
     {
         curEvent = std::move(e1);
         curLine = inputParser.getCurrentLine();
-        inputParser.parseNextEvent();
+        try { inputParser.parseNextEvent(); }
+        catch (const char *msg) { curLine = inputParser.getCurrentLine(); throw msg; }
     }
     else if (e1.time < e2.time)
     {
         curEvent = std::move(e1);
         curLine = inputParser.getCurrentLine();
-        inputParser.parseNextEvent();
+        try { inputParser.parseNextEvent(); }
+        catch (const char *msg) { curLine = inputParser.getCurrentLine(); throw msg; }
     }
     else
     {
         curEvent = e2;
         curLine = outputParser.getCurrentLine();
-        outputParser.parseNextEvent();
+        try { outputParser.parseNextEvent(); }
+        catch (const char *msg) { curLine = outputParser.getCurrentLine(); throw msg; }
     }
 }
