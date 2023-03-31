@@ -99,7 +99,7 @@ public:
     struct performance
     {
         double lastOperatorTime = 0;
-        double maxWaitTime = 0;
+        double maxWaitTime = -1000;
         double electricCharge = 0;
     } perf;
 
