@@ -5,6 +5,7 @@
 #ifndef DATA_H
 #define DATA_H
 #include <string>
+#include <memory>
 #include <random>
 
 /* mode
@@ -14,105 +15,108 @@
  * 3: 二路交通
  * 4: 短途交通
  * 5: 长途交通
- * jamMode: 拥堵模式（在短时间内进行所有请求）
  */
-class time_generator;
-class data {
+class Timer;
+
+
+class Timer {
 private:
-    std::string content;
-    int mode = 0;
-    bool jamMode = false;
-    bool publicTest = false;
-    int people = 1;
+    double second = 1;
+
 public:
-    data(); // 默认则会随机选择一种模式生成
-    data(int mode, bool jamMode);
-    data(int mode, bool jamMode, bool publicTest): mode(mode), jamMode(jamMode), publicTest(publicTest){}
-    void generator();
-    void generator_mode0(time_generator& timer);
-    void generator_mode1(time_generator& timer);
-    void generator_mode2(time_generator& timer);
-    void generator_mode3(time_generator& timer);
-    void generator_mode4(time_generator& timer);
-    void generator_mode5(time_generator& timer);
-    const std::string& getData();
-    std::ostream& getData(std::ostream& os); // output data to os and return os
-    std::iostream& getData(std::iostream& ios); // output data to ios and return ios, then you can read from this ios
-};
-
-class time_generator {
-private:
-    int second = 0;
-    int d_second = 0;
-    int min;
-    int max;
-    bool publicTest = false;
-    std::random_device device;
-    std::default_random_engine engine;
-    std::uniform_int_distribution<int> distribution;
-public:
-
-    explicit time_generator(int mode) {
-        switch (mode) {
-            case 0:
-                min = 200;
-                max = 1000;
-                break;
-            case 1:
-                min = 100;
-                max = 200;
-                break;
-            case 2:
-                min = 70;
-                max = 110;
-                break;
-            default:
-                min = 100;
-                max = 1000;
-        }
-        if (!publicTest)
-            second = 1;
-        engine = std::default_random_engine (device());
-        distribution = std::uniform_int_distribution<int>(min, max);
-    }
-
-    time_generator(int mode, bool publicTest) {
-        this->publicTest = publicTest;
-        switch (mode) {
-            case 0:
-                min = 200;
-                max = 1000;
-                break;
-            case 1:
-                min = 100;
-                max = 200;
-                break;
-            case 2:
-                min = 70;
-                max = 110;
-                break;
-            default:
-                min = 100;
-                max = 1000;
-        }
-        if (!publicTest)
-            second = 1;
-        engine = std::default_random_engine (device());
-        distribution = std::uniform_int_distribution<int>(min, max);
-    }
-    void step() {
-        d_second += distribution(engine);
-        while (d_second >= 1000) {
-            d_second -= 1000;
-            second++;
-        }
+    Timer()= default;
+    void step(double num) {
+        second += num;
     }
 
     std::string getTime() {
-        char output[40];
-        sprintf(output, "%d.%01d", second, d_second / 100);
-        return output;
+        char str[20];
+        sprintf(str, "[%.1lf]", second);
+        return std::string(str);
     }
+
+    Timer(Timer *pTimer) {
+
+    }
+};
+
+
+class Data {
+private:
+    std::string content;
+    int mode = 0;
+    int flag;
+    int amount;
+    double step_size;
+    int elevator[20] = {0};
+    int remove[20] = {0};
+    Timer *timer = new Timer();
+public:
+// 默认则会随机选择一种模式生成
+    explicit Data(int mode = -1, int amount = 0, int flag = -1, double step_size = 0);
+    ~Data() {
+        delete timer;
+    }
+
+    void generate();
+    void generator_mode0();
+    void generator_mode1();
+    void generator_mode2();
+    void generator_mode3();
+    void generator_mode4();
+    void generator_mode5();
+
+    void generateElevator() {
+        int id = rand() % 13 + 7;
+        int cnt = 0;
+        while (elevator[id]) {
+            id = rand() % 13 + 7;
+            cnt++;
+            if (cnt > 20) {
+                return;
+            }
+        }
+        int begin = rand() % 11 + 1;
+        int capacity = rand() % 6 + 3;
+        double speed = (double)(rand() % 5 + 2) / 10.0;
+        elevator[id] = 1;
+        elevatorRequest(id, begin, capacity, speed);
+    }
+
+    void generateMaintain() {
+        int id = rand() % 19 + 1;
+        int cnt = 0;
+        while (elevator[id] != 1 || remove[id] != 0) {
+            id = rand() % 19 + 1;
+            cnt++;
+            if (cnt > 20) {
+                return;
+            }
+        }
+        remove[id] = 1;
+        maintainRequest(id);
+    }
+
+    void personRequest(int id, int start, int end) {
+        char str[20];
+        sprintf(str, "%d-FROM-%d-TO-%d\n", id, start, end);
+        content += str;
+    }
+    void elevatorRequest(int id, int begin, int capacity, double speed) {
+        char str[30];
+        this->content += timer->getTime();
+        sprintf(str, "ADD-Elevator-%d-%d-%d-%.1lf\n", id, begin, capacity, speed);
+        content += str;
+    }
+    void maintainRequest(int id) {
+        char str[30];
+        this->content += timer->getTime();
+        sprintf(str, "MAINTAIN-Elevator-%d\n", id);
+        content += str;
+    }
+
+    std::string& getData();
+
 };
 
 
