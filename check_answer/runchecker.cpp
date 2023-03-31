@@ -3,13 +3,27 @@
 #include <fstream>
 using namespace std;
 
-int main(int argc, char* argv[])
-{
-    int k = atoi(argv[1]);
-    FILE* file = fopen("log.txt", "a+");
-    fprintf(file, "#Testcase %d:\n", k);
+int main(int argc, char* argv[]) {
+    int mode = atoi(argv[1]);
+    FILE* file;
+    if (mode == 1) {
+        int k = atoi(argv[2]);
+        file = fopen("log.txt", "a+");
+        fprintf(file, "#Testcase %d:\n", k);
+    }
+
     ifstream ifs("stdin.txt");
     ifstream ofs("output.txt");
+    if (mode == 0) {
+        if (argc == 3) {
+            ifs = ifstream(argv[1]);
+            ofs = ifstream(argv[2]);
+        } else if (argc == 4) {
+            ifs = ifstream(argv[2]);
+            ofs = ifstream(argv[3]);
+        }
+    }
+
     EventParser ep(ifs, ofs);
     try {
         Checker::checkAnswer(ep);
