@@ -25,19 +25,22 @@ int main(int argc, char* argv[]) {
     }
 
     EventParser ep(ifs, ofs);
-    try {
-        Checker::checkAnswer(ep);
+    Checker::performance perf;
+    try
+    {
+        perf = Checker::checkAnswer(ep);
         cout << "Accepted" << endl;
         fprintf(file, "Accepted\n");
-    } catch (string& msg) {
+    }
+    catch (string &msg)
+    {
         cout << msg << endl;
         fprintf(file, "%s\n", msg.c_str());
         fclose(file);
-        return 1;
+        exit(1);
     }
     fclose(file);
     ifs.close();
     ofs.close();
-
     return 0;
 }

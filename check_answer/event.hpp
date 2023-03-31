@@ -2,13 +2,17 @@
 #define _EVENT_HPP
 #include <iostream>
 
-#define EVENT_NONE      0
-#define EVENT_REQUEST   1
-#define EVENT_ARRIVE    2
-#define EVENT_OPEN      3
-#define EVENT_CLOSE     4
-#define EVENT_IN        5
-#define EVENT_OUT       6
+#define EVENT_NONE      0   // 无效事件
+#define EVENT_ARRIVE    11  // 电梯到达某一位置
+#define EVENT_OPEN      12  // 电梯开始开门
+#define EVENT_CLOSE     13  // 电梯完成关门
+#define EVENT_IN        14  // 乘客进入电梯
+#define EVENT_OUT       15  // 乘客离开电梯
+#define EVENT_MT_AC     16  // 电梯接收到日常维护请求
+#define EVENT_MT_ABLE   17  // 电梯可以开始进行日常维护
+#define EVENT_REQUEST   21  // 乘客请求
+#define EVENT_NEW_ELEV  22  // 增加电梯请求
+#define EVENT_MAINTAIN  23  // 日常维护请求
 struct Event
 {
     int type;
@@ -16,8 +20,11 @@ struct Event
     int elevatorId;
     int curFloor;
     int destFloor;
+    int capacity;
+    double speed;
     double time;
 };
+#define EVENT_FIX_TIME 0.5
 
 std::ostream& operator << (std::ostream&, const Event&);
 
