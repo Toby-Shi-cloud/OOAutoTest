@@ -49,4 +49,4 @@ else
 	$(RRM) ans
 	$(RRM) input
 endif
-	$(RM) log.txt output.txt stdin.txt
+	$(RM) log.txt output.txt stdin.txt stdout.txt
