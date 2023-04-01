@@ -127,7 +127,6 @@ int if_quiet() {
 void rundata(const char* dataname) {
     printf("Generating data\n");
     char configbuf[50];
-    char command[50];
     read_config("data_mode", configbuf);
     int data_mode = atoi(configbuf);
 
@@ -139,7 +138,6 @@ void rundata(const char* dataname) {
 
     read_config("data_step_size", configbuf);
     double data_step_size = atof(configbuf);
-    sprintf(command, "rundata.exe %d %d %d %lf > %s", data_mode, data_amount, data_flag, data_step_size, dataname);
     generatedata(dataname, data_mode, data_amount, data_flag, data_step_size);
 }
 
@@ -203,5 +201,4 @@ void generatedata(const char* filename, int mode, int amount, int flag, double s
     new_data.generate();
     fprintf(datafile, "%s", new_data.getData().c_str());
     fclose(datafile);
-
 }

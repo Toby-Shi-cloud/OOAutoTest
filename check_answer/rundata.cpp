@@ -9,10 +9,7 @@ int main(int argc, char* argv[]) { // 参数：模式、数据数量、时间步
     double step = 0;
     
     if (argc >= 2) {
-        if ((mode = atoi(argv[1])) == 0) {
-            fprintf(stderr, "Generate data error: wrong arguments-mode\n");
-            exit(-1);
-        }
+       mode = atoi(argv[1]);
     }
     if (argc >= 3) {
         amount = atoi(argv[2]);
