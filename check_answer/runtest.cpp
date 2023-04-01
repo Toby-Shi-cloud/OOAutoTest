@@ -26,8 +26,8 @@ int main(int argc, char* argv[]) {
     char input[64];
     char command[256];
     char configbuf[64];
-    char data_file[16] = {0};
-    char out_file[16] = {0};
+    char data_file[32] = {0};
+    char out_file[32] = {0};
     int test_amount;
     int flag_rundata = if_rundata();
     int flag_quiet = if_quiet();
