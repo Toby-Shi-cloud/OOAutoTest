@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <iostream>
 #ifdef _WIN32
 #include <windows.h>
 #include <io.h>
@@ -34,11 +35,13 @@ int main(int argc, char* argv[]) {
             continue;
         }
         if (tem - time < eps) {
-            printf("%s\n", command);
+            printf("%s", command);
+            std::cout << std::endl;
             continue;
         }
         Sleep((tem - time) * 1000);
-        printf("%s\n", command);
+        printf("%s", command);
+        std::cout << std::endl;
         time = tem;
     }
 

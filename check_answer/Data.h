@@ -66,6 +66,14 @@ public:
     void generator_mode4();
     void generator_mode5();
 
+    int getFlag() {
+        return this->flag;
+    }
+
+    double geStep() {
+        return this->step_size;
+    }
+
     void generateElevator() {
         int id = rand() % 13 + 7;
         int cnt = 0;

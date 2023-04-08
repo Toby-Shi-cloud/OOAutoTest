@@ -5,4 +5,5 @@ data_step_size=0
 readInput=0
 input=stdin.txt
 jar_name=code.jar
-test_amount=1
+test_amount=5
+quiet=0
