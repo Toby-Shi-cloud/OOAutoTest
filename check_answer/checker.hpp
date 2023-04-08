@@ -126,6 +126,7 @@ private:
     double time = -1.0; // current time
     ElevatorMap elevators;
     PassengerMap passengers;
+    bool checkIfCanAccessAnyWhere() const;
 public:
     static const int elevatorCount = 6;
 

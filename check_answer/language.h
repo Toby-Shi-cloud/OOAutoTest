@@ -60,6 +60,7 @@
 #define UNKNOWN_ACTION "Sorry, I dont understand"
 #define UNKNOWN_FORMAT_INPUT "Bad Input Format"
 #define UNKNOWN_FORMAT_OUTPUT "Bad Output Format"
+#define ACCESS_MASK_ERROR "Data Error: Bad Access Mask"
 
 #define CONCURRENCY_EXCEED(id, time) "[" + std::to_string(time) + "] Floor(" + std::to_string(id) + "): " FORE_RED "Concurrency Exceed" FORE_RESET_R
 #define CONCURRENCY_GETIN_EXCEED(id, time) "[" + std::to_string(time) + "] Floor(" + std::to_string(id) + "): " FORE_RED "Concurrency(get-in-only) Exceed" FORE_RESET_R
@@ -107,6 +108,7 @@
 #define UNKNOWN_ACTION "未知事件"
 #define UNKNOWN_FORMAT_INPUT "输入格式错误"
 #define UNKNOWN_FORMAT_OUTPUT "输出格式错误"
+#define ACCESS_MASK_ERROR "数据错误: 电梯系统存在不可达的楼层"
 
 #define CONCURRENCY_EXCEED(id, time) "[" + std::to_string(time) + "] 楼层(" + std::to_string(id) + "): " FORE_RED "同时开门数超过限制" FORE_RESET_R
 #define CONCURRENCY_GETIN_EXCEED(id, time) "[" + std::to_string(time) + "] 楼层(" + std::to_string(id) + "): " FORE_RED "同时开门数(仅接人)超过限制" FORE_RESET_R

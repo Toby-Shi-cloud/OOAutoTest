@@ -187,6 +187,20 @@ Checker::~Checker()
         delete elevator.second;
 }
 
+bool Checker::checkIfCanAccessAnyWhere() const
+{
+    int accessMask[11] = { 0 };
+    for (auto& elevator : elevators)
+        for (int i = 0; i < 11; i++)
+            if (elevator.second->accessMask & (1 << i))
+                accessMask[i] |= elevator.second->accessMask;
+    for (int step = 0; step < 11; step++)
+        for (int j = 0; j < 11; j++)
+            if (accessMask[0] & (1 << j))
+                accessMask[0] |= accessMask[j];
+    return accessMask[0] == 0x7ff;
+}
+
 void Checker::checkEvent(const Event& event)
 {
     perf.lastOperatorTime = event.time;
@@ -271,6 +285,8 @@ void Checker::checkEvent(const Event& event)
     default:
         throw UNKNOWN_ACTION;
     }
+    if (!checkIfCanAccessAnyWhere())
+        throw ACCESS_MASK_ERROR;
 }
 
 Checker::performance Checker::checkAnswer(EventParser& parser)
