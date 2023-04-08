@@ -1,4 +1,5 @@
 #include "checker.hpp"
+#include "language.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -32,7 +33,7 @@ int main(int argc, char *argv[])
     try
     {
         perf = Checker::checkAnswer(ep);
-        cout << "Accepted" << endl;
+        cout << FORE_GREEN "Accepted" FORE_RESET_G << endl;
     }
     catch (string &msg)
     {

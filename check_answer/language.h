@@ -1,12 +1,25 @@
 #ifndef _LANGUAGE_H
 #define _LANGUAGE_H
 
+#ifdef _NO_COLOR
+#define _NO_RED
+#define _NO_GREEN
+#endif
+
+#ifdef _NO_GREEN
+#define FORE_GREEN  ""
+#define FORE_RESET_G  ""
+#else
+#define FORE_GREEN  "\x1b[32m"
+#define FORE_RESET_G  "\x1b[39m"
+#endif
+
 #ifdef _NO_RED
 #define FORE_RED    ""
-#define FORE_RESET  ""
+#define FORE_RESET_R  ""
 #else
 #define FORE_RED    "\x1b[31m"
-#define FORE_RESET  "\x1b[39m"
+#define FORE_RESET_R  "\x1b[39m"
 #endif
 
 #ifdef _LANGUAGE_ENGLISH
@@ -20,6 +33,7 @@
 #define OPEN_WRONG_FLOOR "open: Elev Not At This Floor"
 #define OPEN_TWICE "open: Door Already Opened"
 #define OPEN_TOO_HURRY "open: Elev Moving Or Closing"
+#define OPEN_NO_ACCESS "open: Floor Not Accessible"
 
 #define CLOSE_WRONG_FLOOR "close: Elev Not At This Floor"
 #define CLOSE_TWICE "close: Door Already Closed"
@@ -47,10 +61,13 @@
 #define UNKNOWN_FORMAT_INPUT "Bad Input Format"
 #define UNKNOWN_FORMAT_OUTPUT "Bad Output Format"
 
-#define PASSENGER_TRAPPED(id) ("Passenger Left On Elev: " FORE_RED "Passenger(" + std::to_string(id) + ")" FORE_RESET)
-#define PASSENGER_WRONG_DIST(id) ("Passenger Not At Destination: " FORE_RED "Passenger(" + std::to_string(id) + ")" FORE_RESET)
-#define ELEVATOR_NOT_CLOSED(id) ("Door Left Open: " FORE_RED "Elevator(" + std::to_string(id) + ")" FORE_RESET)
-#define ELEVATOR_NOT_MAINTAINED(id) ("Elevator Not Maintained: " FORE_RED "Elevator(" + std::to_string(id) + ")" FORE_RESET)
+#define CONCURRENCY_EXCEED(id, time) "[" + std::to_string(time) + "] Floor(" + std::to_string(id) + "): " FORE_RED "Concurrency Exceed" FORE_RESET_R
+#define CONCURRENCY_GETIN_EXCEED(id, time) "[" + std::to_string(time) + "] Floor(" + std::to_string(id) + "): " FORE_RED "Concurrency(get-in-only) Exceed" FORE_RESET_R
+
+#define PASSENGER_TRAPPED(id) ("Passenger Left On Elev: " FORE_RED "Passenger(" + std::to_string(id) + ")" FORE_RESET_R)
+#define PASSENGER_WRONG_DIST(id) ("Passenger Not At Destination: " FORE_RED "Passenger(" + std::to_string(id) + ")" FORE_RESET_R)
+#define ELEVATOR_NOT_CLOSED(id) ("Door Left Open: " FORE_RED "Elevator(" + std::to_string(id) + ")" FORE_RESET_R)
+#define ELEVATOR_NOT_MAINTAINED(id) ("Elevator Not Maintained: " FORE_RED "Elevator(" + std::to_string(id) + ")" FORE_RESET_R)
 
 #else
 
@@ -63,6 +80,7 @@
 #define OPEN_WRONG_FLOOR "open: 电梯不在该楼层"
 #define OPEN_TWICE "open: 电梯门已经打开"
 #define OPEN_TOO_HURRY "open: 电梯正在移动/关闭"
+#define OPEN_NO_ACCESS "open: 电梯不能到达该楼层"
 
 #define CLOSE_WRONG_FLOOR "close: 电梯不在该楼层"
 #define CLOSE_TWICE "close: 电梯门已经关闭"
@@ -90,10 +108,13 @@
 #define UNKNOWN_FORMAT_INPUT "输入格式错误"
 #define UNKNOWN_FORMAT_OUTPUT "输出格式错误"
 
-#define PASSENGER_TRAPPED(id) ("乘客被困在电梯中: " FORE_RED "乘客 ID = " + std::to_string(id) + FORE_RESET)
-#define PASSENGER_WRONG_DIST(id) ("乘客前往错误楼层: " FORE_RED "乘客 ID = " + std::to_string(id) + FORE_RESET)
-#define ELEVATOR_NOT_CLOSED(id) ("电梯门未关: " FORE_RED "电梯 ID = " + std::to_string(id) + FORE_RESET)
-#define ELEVATOR_NOT_MAINTAINED(id) ("电梯未维护: " FORE_RED "电梯 ID = " + std::to_string(id) + FORE_RESET)
+#define CONCURRENCY_EXCEED(id, time) "[" + std::to_string(time) + "] 楼层(" + std::to_string(id) + "): " FORE_RED "同时开门数超过限制" FORE_RESET_R
+#define CONCURRENCY_GETIN_EXCEED(id, time) "[" + std::to_string(time) + "] 楼层(" + std::to_string(id) + "): " FORE_RED "同时开门数(仅接人)超过限制" FORE_RESET_R
+
+#define PASSENGER_TRAPPED(id) ("乘客被困在电梯中: " FORE_RED "乘客 ID = " + std::to_string(id) + FORE_RESET_R)
+#define PASSENGER_WRONG_DIST(id) ("乘客前往错误楼层: " FORE_RED "乘客 ID = " + std::to_string(id) + FORE_RESET_R)
+#define ELEVATOR_NOT_CLOSED(id) ("电梯门未关: " FORE_RED "电梯 ID = " + std::to_string(id) + FORE_RESET_R)
+#define ELEVATOR_NOT_MAINTAINED(id) ("电梯未维护: " FORE_RED "电梯 ID = " + std::to_string(id) + FORE_RESET_R)
 
 #endif
 

@@ -17,7 +17,8 @@ std::ostream &operator<<(std::ostream &_oStr, const Event &event)
     case EVENT_NEW_ELEV:
         _oStr << "New Elevator: Elevator(" << event.elevatorId << ") ";
         _oStr << "at " << event.curFloor << " with capacity = ";
-        _oStr << event.capacity << " and speed = " << event.speed;
+        _oStr << event.capacity << ", speed = " << event.speed;
+        _oStr << ", and accessMask = " << event.accessMask;
         break;
     case EVENT_MAINTAIN:
         _oStr << "Maintain: Elevator(" << event.elevatorId << ")";
@@ -73,10 +74,11 @@ void EventParser::InputEventParser::parseNextEvent()
         &curEvent.curFloor, &curEvent.destFloor
     ) == 4) { curEvent.type = EVENT_REQUEST; return; }
     else if (sscanf(
-        curLine.c_str(), "[%lf]ADD-Elevator-%d-%d-%d-%lf",
+        curLine.c_str(), "[%lf]ADD-Elevator-%d-%d-%d-%lf-%d",
         &curEvent.time, &curEvent.elevatorId,
-        &curEvent.curFloor, &curEvent.capacity, &curEvent.speed
-    ) == 5) { curEvent.type = EVENT_NEW_ELEV; return; }
+        &curEvent.curFloor, &curEvent.capacity,
+        &curEvent.speed, &curEvent.accessMask
+    ) == 6) { curEvent.type = EVENT_NEW_ELEV; return; }
     else if (sscanf(
         curLine.c_str(), "[%lf]MAINTAIN-Elevator-%d",
         &curEvent.time, &curEvent.elevatorId
