@@ -1,43 +1,33 @@
-#include <iostream>
 #include <cstdio>
-#include "data.h"
+#include "Data.h"
 
-#ifdef _WIN32
-#include <io.h>
-#include <direct.h>
-#else
-#include <unistd.h>
-#include <sys/stat.h>
-#define _access access
-#define _mkdir(f) mkdir(f, 0755)
-#endif
-
-int main(int argc, char* argv[]) {
-    data new_data = data();
-    new_data.generator();
-    int i = atoi(argv[1]);
-#ifdef _WIN32
-    char folder[10] = ".\\input";
-#else
-    char folder[10] = "./input";
-#endif
-    if (_access(folder, 0) == -1) {
-        if (_mkdir(folder)) 
-            return 1;
-    }
-    char filename[50];
-#ifdef _WIN32
-    sprintf(filename, ".\\input\\data%d.txt", i);
-#else
-    sprintf(filename, "./input/data%d.txt", i);
-#endif
-    FILE* outfile = fopen("stdin.txt", "w+");
-    fprintf(outfile, "%s", new_data.getData().c_str());
-    fclose(outfile);
+int main(int argc, char* argv[]) { // 参数：模式、数据数量、时间步进概率、时间步进长度
     
-    outfile = fopen(filename, "w+");
-    fprintf(outfile, "%s", new_data.getData().c_str());
-    fclose(outfile);
+    int mode = -1;
+    int amount = 0;
+    int flag = -1;
+    double step = 0;
+    
+    if (argc >= 2) {
+       mode = atoi(argv[1]);
+    }
+    if (argc >= 3) {
+        amount = atoi(argv[2]);
+    }
+    if (argc >= 4) {
+        if ((flag = atoi(argv[3])) == 0) {
+            fprintf(stderr, "Generate data error: wrong arguments-flag\n");
+            exit(-1);
+        }
+    }
+    if (argc >= 5) {
+        step = atof(argv[4]);
+    }
 
+    Data new_data(mode, amount, flag, step);
+    // printf("%d %f\n", new_data.getFlag(), new_data.geStep());
+    new_data.generate();
+    printf("%s", new_data.getData().c_str());
+    
     return 0;
 }

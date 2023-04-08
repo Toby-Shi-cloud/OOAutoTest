@@ -30,8 +30,8 @@ runtest.o: runtest.c
 %.o: %.cpp
 	$(CC) $(CPPFLAGS) -c $<
 
-data: rundata.o data.o
-	$(CC) $(LDFLAGS) -o data data.o rundata.o
+data: rundata.o Data.o
+	$(CC) $(LDFLAGS) -o data Data.o rundata.o
 
 checker: runchecker.o event.o checker.o
 	$(CC) $(LDFLAGS) -o checker runchecker.o event.o checker.o
@@ -49,4 +49,4 @@ else
 	$(RRM) ans
 	$(RRM) input
 endif
-	$(RM) log.txt output.txt stdin.txt
+	$(RM) log.txt output.txt stdin.txt stdout.txt

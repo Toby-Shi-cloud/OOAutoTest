@@ -99,6 +99,7 @@ void Passenger::exit(Elevator* elevator, double time)
         throw OUT_ELEV_CLOSED;
     place = new Floor(elevator->getFloor());
     elevator->passengerCount--;
+    endTime = time;
 }
 
 Checker::Checker()
@@ -117,6 +118,7 @@ Checker::~Checker()
 
 void Checker::checkEvent(const Event& event)
 {
+    perf.lastOperatorTime = event.time;
     if (event.time < time - eps) // time is increasing
         throw WRONG_TIME_ORDER;
     time = event.time;
@@ -134,16 +136,19 @@ void Checker::checkEvent(const Event& event)
         if (elevator == nullptr) // elevator is not created
             throw NO_ELEVATOR;
         elevator->arrive(event.curFloor, event.time);
+        perf.electricCharge += 0.4;
         break;
     case EVENT_OPEN:
         if (elevator == nullptr) // elevator is not created
             throw NO_ELEVATOR;
         elevator->open(event.curFloor, event.time);
+        perf.electricCharge += 0.1;
         break;
     case EVENT_CLOSE:
         if (elevator == nullptr) // elevator is not created
             throw NO_ELEVATOR;
         elevator->close(event.curFloor, event.time);
+        perf.electricCharge += 0.1;
         break;
     case EVENT_IN:
         if (passenger == nullptr) // passenger is not created
@@ -178,7 +183,7 @@ void Checker::checkEvent(const Event& event)
     case EVENT_REQUEST:
         if (passenger != nullptr) // passenger is not created
             throw DUPLICATE_PASSENGER;
-        passengers[event.passengerId] = new Passenger(event.passengerId, event.curFloor, event.destFloor);
+        passengers[event.passengerId] = new Passenger(event.passengerId, event.curFloor, event.destFloor, event.time + EVENT_FIX_TIME);
         break;
     case EVENT_NEW_ELEV:
         if (elevator != nullptr) // elevator is not created
@@ -197,7 +202,7 @@ void Checker::checkEvent(const Event& event)
     }
 }
 
-void Checker::checkAnswer(EventParser& parser)
+Checker::performance Checker::checkAnswer(EventParser& parser)
 {
     Checker checker;
     while (true)
@@ -217,10 +222,14 @@ void Checker::checkAnswer(EventParser& parser)
             throw PASSENGER_TRAPPED(passenger.second->id);
         if (place->getFloor() != passenger.second->to)
             throw PASSENGER_WRONG_DIST(passenger.second->id);
+        checker.perf.maxWaitTime = std::max(checker.perf.maxWaitTime, passenger.second->getWaitTime());
     }
     for (auto& elevator : checker.elevators)
     {
         if (elevator.second->isOpen())
             throw ELEVATOR_NOT_CLOSED(elevator.second->id);
+        if (elevator.second->maintainState != 0)
+            throw ELEVATOR_NOT_MAINTAINED(elevator.second->id);
     }
+    return std::move(checker.perf);
 }

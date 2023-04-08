@@ -1,8 +1,13 @@
 #ifndef _LANGUAGE_H
 #define _LANGUAGE_H
 
+#ifdef _NO_RED
+#define FORE_RED    ""
+#define FORE_RESET  ""
+#else
 #define FORE_RED    "\x1b[31m"
 #define FORE_RESET  "\x1b[39m"
+#endif
 
 #ifdef _LANGUAGE_ENGLISH
 
@@ -45,6 +50,7 @@
 #define PASSENGER_TRAPPED(id) ("Passenger Left On Elev: " FORE_RED "Passenger(" + std::to_string(id) + ")" FORE_RESET)
 #define PASSENGER_WRONG_DIST(id) ("Passenger Not At Destination: " FORE_RED "Passenger(" + std::to_string(id) + ")" FORE_RESET)
 #define ELEVATOR_NOT_CLOSED(id) ("Door Left Open: " FORE_RED "Elevator(" + std::to_string(id) + ")" FORE_RESET)
+#define ELEVATOR_NOT_MAINTAINED(id) ("Elevator Not Maintained: " FORE_RED "Elevator(" + std::to_string(id) + ")" FORE_RESET)
 
 #else
 
@@ -87,6 +93,7 @@
 #define PASSENGER_TRAPPED(id) ("乘客被困在电梯中: " FORE_RED "乘客 ID = " + std::to_string(id) + FORE_RESET)
 #define PASSENGER_WRONG_DIST(id) ("乘客前往错误楼层: " FORE_RED "乘客 ID = " + std::to_string(id) + FORE_RESET)
 #define ELEVATOR_NOT_CLOSED(id) ("电梯门未关: " FORE_RED "电梯 ID = " + std::to_string(id) + FORE_RESET)
+#define ELEVATOR_NOT_MAINTAINED(id) ("电梯未维护: " FORE_RED "电梯 ID = " + std::to_string(id) + FORE_RESET)
 
 #endif
 

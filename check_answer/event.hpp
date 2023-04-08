@@ -24,6 +24,7 @@ struct Event
     double speed;
     double time;
 };
+#define EVENT_FIX_TIME 0.5
 
 std::ostream& operator << (std::ostream&, const Event&);
 

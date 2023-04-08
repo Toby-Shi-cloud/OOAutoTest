@@ -37,6 +37,7 @@ private:
 public:
     static constexpr double openTime = 0.2;
     static constexpr double closeTime = 0.2;
+    static constexpr double basicMoveTime = 0.6;
     static const int lowestFloor = 1;
     static const int highestFloor = 11;
 
@@ -63,16 +64,27 @@ class Passenger
 {
 private:
     const Place* place;
+    double startTime = 0;
+    double endTime = 0;
+    double exceptTime = 0;
 public:
     const int id;
     const int from;
     const int to;
-    Passenger(int _id, int _from, int _to):
-        place(new Floor(_from)), id(_id), from(_from), to(_to) {}
+    Passenger(int _id, int _from, int _to, double _time): place(new Floor(_from)), id(_id), from(_from), to(_to)
+    {
+        endTime = startTime = _time;
+        for (int f = Elevator::lowestFloor; f <= Elevator::highestFloor; f++)
+            exceptTime += abs(f - from) * Elevator::basicMoveTime;
+        exceptTime /= Elevator::highestFloor - Elevator::lowestFloor + 1;
+        exceptTime += Elevator::openTime + Elevator::closeTime;
+        exceptTime += abs(from - to) * Elevator::basicMoveTime;
+    }
     ~Passenger();
     void enter(Elevator* elevator, double time); // enter the elevator, throw if failed
     void exit(Elevator* elevator, double time); // exit the elevator, throw if failed
     const Place* getPlace() const { return place; }
+    double getWaitTime() const { return endTime - startTime - exceptTime; }
 };
 
 class Checker
@@ -84,11 +96,18 @@ private:
 public:
     static const int elevatorCount = 6;
 
+    struct performance
+    {
+        double lastOperatorTime = 0;
+        double maxWaitTime = -1000;
+        double electricCharge = 0;
+    } perf;
+
     Checker();
     ~Checker();
 
     void checkEvent(const Event& event); // check an event, throw if failed
-    static void checkAnswer(EventParser& parser); // check the answer, throw if failed
+    static performance checkAnswer(EventParser& parser); // check the answer, throw if failed
 };
 
 #endif /* _CHECKER_HPP */

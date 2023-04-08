@@ -1,20 +1,34 @@
 # OOAutoChecker
 
-## 多线程评测使用说明
+## 使用说明
 
-将待评测的 `jar` 包放置于本目录下，每行一个将 `jar` 包名填入 `test_jar` 中。
+因为还没更新 `Makefile`，所以使用评测机的话需要编译后运行。
 
-示例：
+编译 `readata.cpp`：
 
-```txt
-code1.jar
-code2.jar
-code2.jar
+```shell
+g++ -static  -Wall -g -std=c++11 readata.cpp -o readata
 ```
 
-将课程组提供的数据输入器重命名为 `datainput.exe` 并置于本目录下。
+编译 `runjar.cpp`：
 
-然后编译运行 `testall.c` 即可。
+```shell
+g++ -static  -Wall -g -std=c++11 runjar.cpp checker.cpp event.cpp -o runjar
+```
+
+编译 `runtest.cpp`：
+
+```shell
+g++ -static  -Wall -g -std=c++11 Data.cpp runtest.cpp -o runtest
+```
+
+编译后按照 `README_test` 配置评测机相关选项。也可以直接使用默认参数运行
+
+运行 `runtest.exe` 即可：
+
+```shell
+.\runtest
+```
 
 ## MAKEFILE指南
 
