@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
 
     char buf[100];
     double tem;
+    Sleep(1000);
     while (fgets(buf, 100, file) != NULL) {
         char command[50];
         sscanf(buf, "[%lf]%s", &tem, command);
