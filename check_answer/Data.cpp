@@ -33,6 +33,11 @@ Data::Data(int mode, int amount, int flag, double step_size) {
     for (int i = 1; i < 20; i++) {
         elevator[i] = i <= 6 ? 1 : 0;
     }
+    for (int i = 1; i <= 6; ++i) {
+        for (int j = 0; j < 11; ++j) {
+            access_map[i][j] = 1;
+        }
+    }
 }
 
 
