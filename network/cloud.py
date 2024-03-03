@@ -9,8 +9,9 @@ HW.lmin: int - the minimum length
 import leancloud
 
 
-leancloud.init('IhwWUFBgg9AE1wYqpTCOcBIz-gzGzoHsz', '6mI1DvuYjGKOjoy9h12dMn98')
-HW3 = leancloud.Object.extend('HW3')
+# 由于每届题目和测试数据不同，所以如果需要使用云存储判断你的答案性能分，请自行找新的云数据库
+leancloud.init('AppID', 'AppKey')
+HW3 = leancloud.Object.extend('WhatYouClassNamed')
 
 
 def fetch(sh: str, length: int):
