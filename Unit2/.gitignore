@@ -1,0 +1,26 @@
+# bin
+* 
+!*.*
+!*/
+!Makefile
+
+# bin
+dist/**
+*.jar
+*.zip
+*.exe
+*.o
+
+# temp
+*.txt
+temp/**
+score.csv
+jar
+
+# python cache
+*.pyc
+*.pyd
+__pycache__
+
+# config
+config.json
