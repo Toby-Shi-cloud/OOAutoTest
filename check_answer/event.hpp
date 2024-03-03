@@ -21,6 +21,7 @@ struct Event
     int curFloor;
     int destFloor;
     int capacity;
+    int accessMask;
     double speed;
     double time;
 };

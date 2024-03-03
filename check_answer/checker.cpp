@@ -17,6 +17,78 @@ bool Place::operator != (const Place& other) const
     return !(*this == other);
 }
 
+Floor::~Floor()
+{
+    while (!events.empty())
+    {
+        delete events.front();
+        events.pop();
+    }
+}
+
+void Floor::addOpenEvent(int elevatorId, double time)
+{
+    if (eventMap.find(elevatorId) != eventMap.end())
+        throw OPEN_TWICE;
+    FloorEvent* event = new FloorEvent;
+    event->getInOnly = false;
+    event->isOpen = true;
+    event->elevatorId = elevatorId;
+    event->time = time;
+    events.push(event);
+    eventMap[elevatorId] = event;
+}
+
+void Floor::addCloseEvent(int elevatorId, double time, bool getInOnly)
+{
+    if (eventMap.find(elevatorId) == eventMap.end())
+        throw CLOSE_TWICE;
+    FloorEvent* event = new FloorEvent;
+    event->getInOnly = getInOnly;
+    event->isOpen = false;
+    event->elevatorId = elevatorId;
+    event->time = time;
+    events.push(event);
+    eventMap[elevatorId]->getInOnly = getInOnly;
+    eventMap.erase(elevatorId);
+}
+
+void Floor::checkEvents()
+{
+    while (!events.empty())
+    {
+        FloorEvent* event = events.front();
+        events.pop();
+        if (event->isOpen)
+        {
+            concurrency++;
+            if (event->getInOnly)
+                concurrencyGetIn++;
+        }
+        else
+        {
+            concurrency--;
+            if (event->getInOnly)
+                concurrencyGetIn--;
+        }
+        if (concurrency > maxConcurrency)
+            throw CONCURRENCY_EXCEED(floor, event->time);
+        if (concurrencyGetIn > maxConcurrencyGetIn)
+            throw CONCURRENCY_GETIN_EXCEED(floor, event->time);
+        delete event;
+    }
+}
+
+bool Elevator::checkIfGetInOnly() const
+{
+    for (auto& passengerId : reservedPassengerIds)
+    {
+        if (passengerIds.count(passengerId) == 0)
+            return false;
+    }
+    return true;
+}
+
 void Elevator::arrive(int _floor, double time)
 {
     if (abs(floor - _floor) != 1) // only one floor up or down
@@ -43,8 +115,13 @@ void Elevator::open(int _floor, double time)
         throw OPEN_TWICE;
     if (time < availableTime - eps) // available
         throw OPEN_TOO_HURRY;
+    if (maintainState != 2 && !(accessMask & (1 << (floor - 1)))) // in access mask
+        throw OPEN_NO_ACCESS;
     closed = false;
     availableTime = time + openTime;
+    Floor::getFloor(floor).addOpenEvent(id, time);
+    for (auto& passengerId : passengerIds)
+        reservedPassengerIds.insert(passengerId);
 }
 
 void Elevator::close(int _floor, double time)
@@ -57,6 +134,8 @@ void Elevator::close(int _floor, double time)
         throw CLOSE_TOO_HURRY;
     closed = true;
     availableTime = time;
+    Floor::getFloor(floor).addCloseEvent(id, time, checkIfGetInOnly());
+    reservedPassengerIds.clear();
 }
 
 void Elevator::maintain()
@@ -65,15 +144,8 @@ void Elevator::maintain()
         throw MAINTAIN_NOT_ACCEPTED;
     if (isOpen()) // still open
         throw MAINTAIN_NOT_CLOSED;
-    if (passengerCount > 0) // no passenger
+    if (passengerIds.size() > 0) // no passenger
         throw MAINTAIN_NOT_EMPTY;
-}
-
-Passenger::~Passenger()
-{
-    // do not delete place if it is a elevator
-    if (typeid(*place) == typeid(Floor))
-        delete place;
 }
 
 void Passenger::enter(Elevator* elevator, double time)
@@ -84,9 +156,8 @@ void Passenger::enter(Elevator* elevator, double time)
         throw IN_WRONG_FLOOR;
     if (!elevator->canEnter()) // elevator is available
         throw IN_FULL_CLOSED;
-    delete place; // delete the floor
     place = elevator;
-    elevator->passengerCount++;
+    elevator->passengerIds.insert(id);
 }
 
 void Passenger::exit(Elevator* elevator, double time)
@@ -97,8 +168,8 @@ void Passenger::exit(Elevator* elevator, double time)
         throw OUT_WRONG_ELEV;
     if (!elevator->canExit()) // elevator is available
         throw OUT_ELEV_CLOSED;
-    place = new Floor(elevator->getFloor());
-    elevator->passengerCount--;
+    place = &Floor::getFloor(elevator->getFloor());
+    elevator->passengerIds.erase(id);
     endTime = time;
 }
 
@@ -114,6 +185,20 @@ Checker::~Checker()
         delete passenger.second;
     for (auto& elevator : elevators)
         delete elevator.second;
+}
+
+bool Checker::checkIfCanAccessAnyWhere() const
+{
+    int accessMask[11] = { 0 };
+    for (auto& elevator : elevators)
+        for (int i = 0; i < 11; i++)
+            if (elevator.second->accessMask & (1 << i))
+                accessMask[i] |= elevator.second->accessMask;
+    for (int step = 0; step < 11; step++)
+        for (int j = 0; j < 11; j++)
+            if (accessMask[0] & (1 << j))
+                accessMask[0] |= accessMask[j];
+    return accessMask[0] == 0x7ff;
 }
 
 void Checker::checkEvent(const Event& event)
@@ -188,7 +273,7 @@ void Checker::checkEvent(const Event& event)
     case EVENT_NEW_ELEV:
         if (elevator != nullptr) // elevator is not created
             throw DUPLICATE_ELEVATOR;
-        elevators[event.elevatorId] = new Elevator(event.elevatorId, event.curFloor, event.capacity, event.speed);
+        elevators[event.elevatorId] = new Elevator(event.elevatorId, event.curFloor, event.capacity, event.accessMask, event.speed);
         break;
     case EVENT_MAINTAIN:
         if (elevator == nullptr) // elevator is not created
@@ -200,6 +285,8 @@ void Checker::checkEvent(const Event& event)
     default:
         throw UNKNOWN_ACTION;
     }
+    if (!checkIfCanAccessAnyWhere())
+        throw ACCESS_MASK_ERROR;
 }
 
 Checker::performance Checker::checkAnswer(EventParser& parser)
@@ -212,7 +299,7 @@ Checker::performance Checker::checkAnswer(EventParser& parser)
             if(!parser.isAvailable()) break;
             checker.checkEvent(parser.getCurrentEvent());
         } catch (const char *msg) {
-            throw parser.getCurrentLine() + " " + FORE_RED + msg + FORE_RESET;
+            throw parser.getCurrentLine() + " " + FORE_RED + msg + FORE_RESET_R;
         }
     }
     for (auto& passenger : checker.passengers)
@@ -230,6 +317,11 @@ Checker::performance Checker::checkAnswer(EventParser& parser)
             throw ELEVATOR_NOT_CLOSED(elevator.second->id);
         if (elevator.second->maintainState != 0)
             throw ELEVATOR_NOT_MAINTAINED(elevator.second->id);
+    }
+    for (int i = Place::lowestFloor; i <= Place::highestFloor; i++)
+    {
+        auto& floor = Floor::getFloor(i);
+        floor.checkEvents();
     }
     return std::move(checker.perf);
 }

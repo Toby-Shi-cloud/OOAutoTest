@@ -15,7 +15,7 @@ else
     RRM = rm -f -r
 endif
 
-.PHONY: clean event.cpp checker.cpp
+.PHONY: clean *.cpp
 
 run: clean makeonly
 	$(MAKE) clean_o
